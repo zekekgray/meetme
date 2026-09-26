@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ArtiByte Meet</title>
+<!-- ABM-V1-83736316 -->
+<title>Artimeet</title>
 <style>
 :root{--gold:#c89f4a;--gold2:#e2c47d;--ink:#20201e;--muted:#77736b;--line:#e8e2d7;--cream:#faf8f3;--card:#fffdf9}
 *{box-sizing:border-box}
@@ -12,22 +13,18 @@ button,input,textarea{font:inherit}
 button{cursor:pointer}
 .app{max-width:980px;margin:auto;padding:24px}
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px}
-.brandmark{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#e4c878,#b88935);display:grid;place-items:center;color:white;font-weight:900;box-shadow:0 6px 16px #c8a85a33}
-.brand small{display:block;color:var(--gold);font-size:12px;margin-top:-2px}
+/* ABM-V1-83736322 : simplified, brandmark & small sub-label no longer used */
+.brand{font-weight:800;font-size:19px;letter-spacing:-.01em}
 .menu{width:44px;height:44px;border:1px solid var(--line);background:#fff;border-radius:13px;font-size:20px}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:25px;padding:30px;box-shadow:0 12px 38px #3025100b}
-.hero{display:grid;grid-template-columns:1fr .72fr;gap:28px;align-items:center}
+/* ABM-V2-83736324 : compact single-column hero — was specified before pero hindi na-apply */
+.hero{max-width:600px;margin:0 auto;text-align:left}
 .eyebrow{color:var(--gold);font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
-h1{font-size:clamp(36px,5vw,56px);line-height:1;letter-spacing:-.045em;margin:9px 0 13px}
+/* ABM-V1-83736303 */
+h1{font-size:clamp(28px,4vw,40px);line-height:1.05;letter-spacing:-.04em;margin:6px 0 10px}
 h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px}
 .sub,p{color:var(--muted);line-height:1.6}
-.mascot{min-height:290px;border-radius:23px;background:linear-gradient(145deg,#fffdf7,#f5efe3);display:grid;place-items:center;overflow:hidden}
-.bot{width:125px;height:125px;border-radius:43%;background:#f4efe3;border:7px solid #e8dfcd;position:relative;box-shadow:0 15px 35px #80662b18}
-.bot:before,.bot:after{content:"";position:absolute;width:15px;height:15px;background:#333;border-radius:50%;top:43px}
-.bot:before{left:31px}.bot:after{right:31px}
-.smile{position:absolute;width:28px;height:14px;border-bottom:4px solid #333;border-radius:0 0 30px 30px;left:41px;top:63px}
-.calendar-icon{position:absolute;right:-27px;bottom:-15px;background:var(--gold);color:#fff;border-radius:13px;padding:11px;font-size:23px;border:5px solid #fff}
+/* ABM-V1-83736301 : mascot module removed (production direction) */
 .choices{display:grid;gap:9px;margin-top:19px}
 .choice{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:13px;background:#fff;text-align:left}
 .choice.active{border-color:var(--gold);background:#fff9ea}
@@ -47,6 +44,8 @@ h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px}
 .times{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}
 .time.active{background:var(--gold);color:#fff;border-color:var(--gold)}
 .duration{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.duration .active{background:var(--gold);color:#fff;border-color:var(--gold)}
+/* ABM-V3-83736401 : minimalist monochrome icon system (Apple/SF Symbols style) */
+.icon{width:15px;height:15px;vertical-align:-2px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;display:inline-block;margin-right:6px}
 label{display:block;font-size:12px;font-weight:750;margin:14px 0 7px}
 input,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:#fff;outline:none}
 input:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px #c89f4a18}
@@ -54,22 +53,35 @@ textarea{min-height:90px;resize:vertical}
 .actions{display:flex;gap:10px;margin-top:18px}
 .actions .primary{flex:1}
 .confirm{text-align:center;max-width:620px;margin:auto}
-.check{width:72px;height:72px;background:#d9f2d9;color:#438343;border-radius:50%;display:grid;place-items:center;font-size:40px;margin:0 auto 18px}
+/* ABM-V6-83736704 : black/white minimalist check, replaces emoji ✓ */
+.check{width:72px;height:72px;background:var(--ink);color:#fff;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px}
+.check svg{width:32px;height:32px;stroke:#fff;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+/* ABM-V3-83736402 : black/white minimalist, was green */
+.check{width:72px;height:72px;background:var(--ink);color:#fff;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px}
+.check svg{width:32px;height:32px;stroke:#fff;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .summary{border:1px solid var(--line);border-radius:16px;padding:18px;text-align:left;background:#fff;margin:22px 0}
 .row{display:flex;gap:12px;padding:9px 0}.row b{min-width:120px;font-size:13px}.row span{font-size:13px;color:var(--muted)}
 .admin{display:none}.admin.show{display:block}
 .req{border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff;margin-top:10px}
 .reqhead{display:flex;justify-content:space-between;gap:12px}.req small{display:block;color:var(--muted);margin-top:5px}
-.pill{font-size:11px;padding:5px 9px;border-radius:999px;background:#fff1c9;color:#9a711e;font-weight:750;height:max-content}.pill.green{background:#e3f5e5;color:#43854b}
+/* ABM-V1-83736308 : pill variants for the full request-status set + calendar-sync pill */
+.pill{font-size:11px;padding:5px 9px;border-radius:999px;background:#fff1c9;color:#9a711e;font-weight:750;height:max-content}
+.pill.green{background:#e3f5e5;color:#43854b}
+.pill.blue{background:#e3ecf9;color:#3a5f9e}
+.pill.purple{background:#f1e6fa;color:#7d4aa8}
+.pill.gray{background:#eee;color:#777}
+.pillrow{display:flex;gap:7px;flex-wrap:wrap}
 .reqactions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.reqactions .btn{padding:9px 12px;font-size:12px}
-@media(max-width:720px){.app{padding:13px}.hero{grid-template-columns:1fr}.mascot{min-height:210px}.panel{padding:21px}.times{grid-template-columns:repeat(2,1fr)}.reqhead{flex-direction:column}.actions{flex-wrap:wrap}.actions .btn{flex:1}}
+/* ABM-V2-83736331 : dead .mascot + redundant .hero override cleaned up (hero is single-column app-wide na) */
+@media(max-width:720px){.app{padding:13px}.panel{padding:21px}.times{grid-template-columns:repeat(2,1fr)}.reqhead{flex-direction:column}.actions{flex-wrap:wrap}.actions .btn{flex:1}}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div class="brand"><div class="brandmark">A</div><div>ArtiByte<small>Meet</small></div></div>
-    <button class="menu" id="menu" aria-label="Open internal meeting requests">☰</button>
+    <!-- ABM-V2-83736323 : stray brandmark div finally removed -->
+    <div class="brand">Artimeet</div>
+    <!-- ABM-V1-83736306 : public hamburger removed. Internal route now gated below (temporary ?internal=1 flag until real auth ships) -->
   </header>
 
   <main id="public"></main>
@@ -81,18 +93,70 @@ textarea{min-height:90px;resize:vertical}
   const publicView=document.getElementById('public');
   const adminView=document.getElementById('admin');
 
+  // ABM-V1-83736305 : dynamic month/year + backend-driven availability scaffold
+  const now=new Date();
   let s={
     step:0,
     type:'Business / Partnership',
-    day:'28',
-    date:'August 28, 2026',
-    time:'2:00 PM',
+    viewMonth:now.getMonth(),
+    viewYear:now.getFullYear(),
+    day:null,
+    date:null,
+    time:null,
     duration:'30 min',
-    name:'',org:'',email:'',phone:'',notes:''
+    location:'Google Meet',
+    timezone:Intl.DateTimeFormat().resolvedOptions().timeZone,
+    availableTimes:[],
+    loadingTimes:false,
+    name:'',org:'',email:'',phone:'',notes:'',
+    meetingId:'',
+    requestStatus:'Requested',
+    calendarStatus:'Not synced',
+    // ABM-V5-83736601 : mock session + personal meeting store (TODO(backend): real auth/session + server-side meetings API)
+    account:null, // null = guest. Once "created": { name, email, org, phone, timezone }
+    meetings:[],  // this user's own requests only — never other people's (that's the Internal admin's job)
+    view:'flow',  // 'flow' (booking wizard, uses s.step) | 'home' | 'myMeetings' | 'myProfile' | 'myRequest'
+    /* === START: ARTIMEET PROFILE EDIT STATE === */
+    editingProfile:false // toggles the My Profile screen between view mode and edit mode
+    /* === END: ARTIMEET PROFILE EDIT STATE === */
   };
 
   const types=['Business / Partnership','Product Demo','Client Meeting','Technical Discussion','Career / Hiring','Other'];
-  const days=['24','25','26','27','28','29','30'];
+  const locations=['Google Meet','Microsoft Teams','In person','Phone'];
+  const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  function daysInMonth(y,m){return new Date(y,m+1,0).getDate();}
+
+  // ABM-V2-83736326 : cell generator (blanks for offset + real day numbers), Monday-first to match the week header
+  function buildCalendarCells(year,month){
+    const total=daysInMonth(year,month);
+    const firstDow=(new Date(year,month,1).getDay()+6)%7;
+    const cells=[];
+    for(let i=0;i<firstDow;i++) cells.push(null);
+    for(let d=1;d<=total;d++) cells.push(d);
+    return cells;
+  }
+
+  // TODO(backend): replace with real call e.g. GET /api/availability?date=YYYY-MM-DD
+  async function fetchAvailableTimes(year,month,day){
+    s.loadingTimes=true; render();
+    await new Promise(r=>setTimeout(r,300)); // simulate network
+    const d=new Date(year,month,day).getDay();
+    const pool = d===0||d===6 ? [] : ['9:00 AM','10:00 AM','11:00 AM','1:00 PM','2:00 PM','3:00 PM','4:00 PM'];
+    s.availableTimes = pool;
+    s.loadingTimes=false;
+    render();
+  }
+
+  // ABM-V5-83736609 : TODO(backend) — swap for real Google/Outlook OAuth "add to calendar" instead of raw .ics download
+  function downloadIcs(m){
+    const ics=`BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Artimeet — ${m.type}\nDESCRIPTION:Meeting ID ${m.meetingId}\nLOCATION:${m.location}\nEND:VEVENT\nEND:VCALENDAR`;
+    const blob=new Blob([ics],{type:'text/calendar'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`${m.meetingId}.ics`;
+    a.click();
+  }
 
   function endTime(time,duration){
     let [hm,ap]=time.split(' ');
@@ -102,48 +166,169 @@ textarea{min-height:90px;resize:vertical}
     const d=new Date(2026,0,1,h,m+parseInt(duration));
     let hh=d.getHours(), aa=hh>=12?'PM':'AM';
     hh=hh%12||12;
-    return `${hh}:${String(d.getMinutes()).padStart(2,'0')} ${aa}`;
+   return `${hh}:${String(d.getMinutes()).padStart(2,'0')} ${aa}`;
+  }
+
+  function submitMeetingRequest(name,org,email,phone,notes){
+    s.name=name; s.org=org; s.email=email; s.phone=phone; s.notes=notes;
+    s.meetingId='ABM-'+now.getFullYear()+'-'+Math.floor(1000+Math.random()*9000);
+    s.meetings.push({
+      meetingId:s.meetingId,
+      date:s.date,
+      time:s.time,
+      type:s.type,
+      location:s.location,
+      requestStatus:'Requested'
+    });
+    s.step=3;
+    render();
+  }
+
+  function renderHome(){    publicView.innerHTML=`
+    <div class="panel">
+      <div class="eyebrow">Artimeet</div>
+      <h2>Welcome back${s.account&&s.account.name?', '+s.account.name:''}</h2>
+      <div class="sub">${s.account?s.account.email:''}</div>
+      <div class="choices" style="margin-top:20px">
+        <button class="choice" id="goNewRequest"><span class="dot"></span><span>New meeting request</span></button>
+        <button class="choice" id="goMyMeetings"><span class="dot"></span><span>My meetings (${s.meetings.length})</span></button>
+        <button class="choice" id="goMyProfile"><span class="dot"></span><span>My profile</span></button>
+      </div>
+      <button class="btn full" id="signOut" style="margin-top:20px">Sign out</button>
+    </div>`;
+  }
+
+  function renderMyMeetings(){
+    publicView.innerHTML=`
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div><div class="eyebrow">Artimeet</div><h2>My Meetings</h2></div>
+        <button class="btn" id="backHome">← Back</button>
+      </div>
+      ${s.meetings.length===0 ? `<p class="sub">Wala ka pang meeting requests.</p>` : s.meetings.map(m=>`
+        <div class="req">
+          <div class="reqhead">
+            <div><b>${m.meetingId} · ${m.date} · ${m.time}</b><small>${m.type} · ${m.location}</small></div>
+            <div class="pillrow"><span class="pill ${m.requestStatus==='Confirmed'?'green':m.requestStatus==='Reviewing'?'blue':m.requestStatus==='Cancelled'?'gray':''}">${m.requestStatus}</span></div>
+          </div>
+          <div class="reqactions"><button class="btn" data-ics="${m.meetingId}">＋ Add to Calendar</button></div>
+        </div>
+      `).join('')}
+      <button class="btn primary full" id="goNewRequest2" style="margin-top:16px">+ New request</button>
+    </div>`;
+  }
+
+  function renderMyProfile(){
+    /* === START: ARTIMEET PROFILE EDIT MODE === */
+    if(s.editingProfile){
+      publicView.innerHTML=`
+      <div class="panel confirm" style="max-width:420px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+          <h2 style="margin:0">Edit Profile</h2>
+          <button class="btn" id="cancelEditProfile">✕ Cancel</button>
+        </div>
+        <div class="sub">Email can't be changed here — it's your sign-in ID.</div>
+        <form id="profileForm">
+          <label>Name</label><input id="pfName" value="${s.account&&s.account.name?s.account.name:''}" placeholder="Juan Dela Cruz">
+          <label>Org</label><input id="pfOrg" value="${s.account&&s.account.org?s.account.org:''}" placeholder="ABC Company">
+          <label>Phone</label><input id="pfPhone" value="${s.account&&s.account.phone?s.account.phone:''}" placeholder="+63 912 345 6789">
+          <label>Timezone</label><input id="pfTimezone" value="${s.account?s.account.timezone:''}" placeholder="Asia/Manila">
+          <div class="actions"><button class="btn" id="cancelEditProfile2" type="button">Cancel</button><button class="btn primary" type="submit">Save changes</button></div>
+        </form>
+      </div>`;
+      return;
+    }
+    /* === END: ARTIMEET PROFILE EDIT MODE === */
+    publicView.innerHTML=`
+    <div class="panel confirm" style="max-width:420px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+        <h2 style="margin:0">My Profile</h2>
+        <button class="btn" id="backHome2">← Back</button>
+      </div>
+      <div class="summary" style="text-align:left">
+        <div class="row"><b>Email</b><span>${s.account?s.account.email:''}</span></div>
+        <div class="row"><b>Name</b><span>${s.account&&s.account.name?s.account.name:'—'}</span></div>
+        <div class="row"><b>Org</b><span>${s.account&&s.account.org?s.account.org:'—'}</span></div>
+        <div class="row"><b>Phone</b><span>${s.account&&s.account.phone?s.account.phone:'—'}</span></div>
+        <div class="row"><b>Timezone</b><span>${s.account?s.account.timezone:''}</span></div>
+      </div>
+      <button class="btn full" id="editProfile">Edit profile</button>
+      <button class="btn full" id="signOut2">Sign out</button>
+    </div>`;
   }
 
   function render(){
+    // ABM-V7-83736804 : single render() — home/myMeetings/myProfile dispatch first, else falls through to the step wizard below
+    if(s.view==='home'){ renderHome(); bind(); return; }
+    if(s.view==='myMeetings'){ renderMyMeetings(); bind(); return; }
+    if(s.view==='myProfile'){ renderMyProfile(); bind(); return; }
+
+    // ABM-V1-83736304 : compact single-column entry, mascot removed
     if(s.step===0){
       publicView.innerHTML=`
       <div class="panel hero">
-        <div>
-          <div class="eyebrow">ArtiByte Meet</div>
-          <h1>Let’s find a time.</h1>
-          <p>Request a meeting with our team. Tell us what you’d like to discuss and we’ll take care of the rest.</p>
-          <div class="choices">
-            ${types.map(t=>`<button class="choice ${s.type===t?'active':''}" data-type="${t}"><span class="dot"></span><span>${t}</span></button>`).join('')}
-          </div>
-          <button class="btn primary full" id="next">Continue →</button>
+        <!-- ABM-V1-83736318 -->
+        <div class="eyebrow">Artimeet</div>
+        <h1>Let's find a time.</h1>
+        <p>Tell us what you'd like to discuss — we'll take it from there.</p>
+        <div class="choices">
+          ${types.map(t=>`<button class="choice ${s.type===t?'active':''}" data-type="${t}"><span class="dot"></span><span>${t}</span></button>`).join('')}
         </div>
-        <div class="mascot">
-          <div class="bot"><div class="smile"></div><div class="calendar-icon">▦</div></div>
-        </div>
+        <button class="btn primary full" id="next">Continue →</button>
       </div>`;
     }
 
+    // ABM-V2-83736325 : real calendar (no more hardcoded "August" / undefined `days`), real availability wired in
     if(s.step===1){
+      const cells=buildCalendarCells(s.viewYear,s.viewMonth);
+      const todayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate());
       publicView.innerHTML=`
       <div class="panel">
         <div class="steps"><span class="stepdot on"></span><span class="stepdot on"></span><span class="stepdot"></span><span class="stepdot"></span></div>
-        <h2>Choose a date</h2>
-        <div class="sub">Pick a preferred time that works for you.</div>
+        <h2>When would you like to meet?</h2>
+        <div class="sub">Propose a date and time — we'll confirm and get back to you.</div>
         <div class="calendar">
-          <div class="month"><button>‹</button><span>August 2026</span><button>›</button></div>
+          <div class="month"><button id="prevMonth" type="button">‹</button><span>${monthNames[s.viewMonth]} ${s.viewYear}</span><button id="nextMonth" type="button">›</button></div>
           <div class="week">${['M','T','W','T','F','S','S'].map(x=>`<span>${x}</span>`).join('')}</div>
-          <div class="days">${days.map(d=>`<button class="day ${s.day===d?'selected':''}" data-day="${d}">${d}</button>`).join('')}</div>
+          <div class="days">${cells.map(d=>{
+            if(d===null) return `<span></span>`;
+            const isPast=new Date(s.viewYear,s.viewMonth,d)<todayStart;
+            return `<button class="day ${s.day===d?'selected':''}" data-day="${d}" ${isPast?'disabled':''}>${d}</button>`;
+          }).join('')}</div>
         </div>
-        <div style="margin-top:20px;font-weight:750">Available times</div>
-        <div class="times">${['10:00 AM','11:00 AM','2:00 PM','3:00 PM'].map(t=>`<button class="btn time ${s.time===t?'active':''}" data-time="${t}">${t}</button>`).join('')}</div>
+        <div style="margin-top:20px;font-weight:750">Preferred time</div>
+        <div class="times">${
+          !s.day ? `<span class="sub">Pumili muna ng petsa sa itaas.</span>` :
+          s.loadingTimes ? `<span class="sub">Checking suggested time slots…</span>` :
+          s.availableTimes.length===0 ? `<span class="sub">Walang suggested na oras — pumili ka na lang ng petsa at oras na gusto mo.</span>` :
+          s.availableTimes.map(t=>`<button class="btn time ${s.time===t?'active':''}" data-time="${t}">${t}</button>`).join('')
+        }</div>
         <div style="margin-top:20px;font-weight:750">Duration</div>
         <div class="duration">${['30 min','45 min','60 min'].map(d=>`<button class="btn ${s.duration===d?'active':''}" data-duration="${d}">${d}</button>`).join('')}</div>
-        <div class="actions"><button class="btn" id="back">← Back</button><button class="btn primary" id="next">Continue →</button></div>
+        <div style="margin-top:20px;font-weight:750">Meeting location</div>
+        <div class="duration">${locations.map(l=>`<button class="btn ${s.location===l?'active':''}" data-location="${l}">${l}</button>`).join('')}</div>
+        <div class="sub" style="margin-top:12px">Times shown in your timezone: <b>${s.timezone}</b></div>
+        <div class="actions"><button class="btn" id="back">← Back</button><button class="btn primary" id="next" ${(!s.day||!s.time)?'disabled':''}>Continue →</button></div>
       </div>`;
     }
 
-    if(s.step===2){
+     if(s.step===2){
+      /* === START: ARTIMEET STEP2 BRANCH (LOGGED-IN VS GUEST) === */
+      if(s.account){
+        publicView.innerHTML=`
+        <div class="panel">
+          <div class="steps"><span class="stepdot on"></span><span class="stepdot on"></span><span class="stepdot on"></span><span class="stepdot"></span></div>
+          <h2>Almost there. ✨</h2>
+          <div class="sub">You're booking a meeting with ${s.account.name||'your account'}.</div>
+          <div class="summary" style="text-align:left">
+            <div class="row"><b>Name</b><span>${s.account.name||'—'}</span></div>
+            <div class="row"><b>Org</b><span>${s.account.org||'—'}</span></div>
+            <div class="row"><b>Email</b><span>${s.account.email||'—'}</span></div>
+          </div>
+          <label>Message (optional)</label><textarea id="notes" placeholder="Anything you'd like to discuss...">${s.notes}</textarea>
+          <div class="actions"><button class="btn" id="back" type="button">← Back</button><button class="btn primary" id="requestMeetingLoggedIn" type="button"><svg class="icon" viewBox="0 0 24 24"><path d="M22 2 11 13M22 2 15 22l-4-9-9-4 20-7z"/></svg>Request Meeting</button></div>
+        </div>`;
+      } else {
       publicView.innerHTML=`
       <div class="panel">
         <div class="steps"><span class="stepdot on"></span><span class="stepdot on"></span><span class="stepdot on"></span><span class="stepdot"></span></div>
@@ -155,35 +340,90 @@ textarea{min-height:90px;resize:vertical}
           <label>Email *</label><input id="email" type="email" required value="${s.email}" placeholder="juan@email.com">
           <label>Phone</label><input id="phone" value="${s.phone}" placeholder="+63 912 345 6789">
           <label>Notes (optional)</label><textarea id="notes" placeholder="Tell us anything we should know.">${s.notes}</textarea>
-          <div class="actions"><button class="btn" id="back" type="button">← Back</button><button class="btn primary" type="submit">✈ Request Meeting</button></div>
-        </form>
+          <!-- ABM-V3-83736405 -->
+          <div class="actions"><button class="btn" id="back" type="button">← Back</button><button class="btn primary" type="submit"><svg class="icon" viewBox="0 0 24 24"><path d="M22 2 11 13M22 2 15 22l-4-9-9-4 20-7z"/></svg>Request Meeting</button></div>
+         </form>
       </div>`;
+      }
     }
 
+       // ABM-V4-83736501 : added optional-account CTA below confirmation (no forced signup)
     if(s.step===3){
       publicView.innerHTML=`
       <div class="panel confirm">
-        <div class="check">✓</div>
+        <!-- ABM-V6-83736705 -->
+        <div class="check"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
         <h2>Meeting requested!</h2>
-        <p class="sub">Your request has been sent to the ArtiByte team.<br>We’ll email you once the meeting is confirmed.</p>
+        <p class="sub">Reference <b>${s.meetingId}</b>. We'll email you once it's confirmed.</p>
+        <!-- ABM-V6-83736706 : emoji replaced with monochrome line icons -->
         <div class="summary">
-          <div class="row"><b>📅 Date</b><span>${s.date}</span></div>
-          <div class="row"><b>◷ Time</b><span>${s.time} – ${endTime(s.time,s.duration)}</span></div>
-          <div class="row"><b>◇ Type</b><span>${s.type}</span></div>
-          <div class="row"><b>👤 Guest</b><span>${s.name}${s.org?' · '+s.org:''}</span></div>
+          <div class="row"><b><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>Date</b><span>${s.date}</span></div>
+          <div class="row"><b><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Time</b><span>${s.time} – ${endTime(s.time,s.duration)} (${s.timezone})</span></div>
+          <div class="row"><b><svg class="icon" viewBox="0 0 24 24"><path d="M11 3H4a1 1 0 0 0-1 1v7l9 9 8-8-9-9z"/><circle cx="7.5" cy="7.5" r="1"/></svg>Type</b><span>${s.type}</span></div>
+          <div class="row"><b><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>Location</b><span>${s.location}</span></div>
+          <div class="row"><b><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>Guest</b><span>${s.name}${s.org?' · '+s.org:''}</span></div>
+          <div class="row"><b>Status</b><span>${s.requestStatus} — pending host confirmation · Calendar: ${s.calendarStatus}</span></div>
         </div>
-        <button class="btn primary full" id="viewRequest">View Request</button>
-        <button class="btn full" id="newRequest">Back to ArtiByte</button>
+        <button class="btn primary full" id="addCalendar">＋ Add to Calendar</button>
+        <!-- ABM-V6-83736702 : logged-in users skip the account-creation pitch entirely -->
+        ${s.account ? `
+          <button class="btn full" id="goHomeFromConfirm">Back to Artimeet</button>
+        ` : `
+          <div class="sub" style="margin-top:24px;font-weight:750;color:var(--ink)">Want to manage your meetings?</div>
+          <div class="sub" style="margin-top:4px">Create an account to view requests, reschedule, cancel, and keep your info for future meetings.</div>
+          <button class="btn primary full" id="createAccount">Create an Artimeet account</button>
+          <button class="btn full" id="newRequest">Continue without an account</button>
+        `}
       </div>`;
     }
+
+    // ABM-V4-83736502 : new step 4 — account creation, fully optional, email pre-filled from the request form
+    // ABM-V7-83736801 : password field removed — account creation is email-only now
+    if(s.step===4){
+      publicView.innerHTML=`
+      <div class="panel confirm" style="max-width:420px">
+        <h2>Create your Artimeet account</h2>
+        <div class="sub">Manage this and future meeting requests in one place.</div>
+        <form id="acctForm">
+          <!-- === START: ARTIMEET NICKNAME FIELD === -->
+          <label>First name / nickname *</label><input id="acctNickname" required value="${s.name}" placeholder="Juan">
+          <!-- === END: ARTIMEET NICKNAME FIELD === -->
+          <label>Email *</label><input id="acctEmail" type="email" required value="${s.email}" placeholder="juan@email.com">
+          <button class="btn primary full" type="submit">Create account</button>
+        </form>
+        <div class="sub" style="margin-top:14px;text-align:center">Already have an account? <a href="#" id="signInLink">Sign in</a></div>
+        <div style="display:flex;align-items:center;gap:10px;margin:22px 0;color:var(--muted);font-size:12px">
+          <div style="flex:1;height:1px;background:var(--line)"></div>or<div style="flex:1;height:1px;background:var(--line)"></div>
+        </div>
+        <button class="btn full" id="skipAccount">Continue without an account</button>
+      </div>`;
+   }
     bind();
   }
 
-  function bind(){
-    document.querySelectorAll('[data-type]').forEach(b=>b.onclick=()=>{s.type=b.dataset.type;render()});
-    document.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{s.day=b.dataset.day;s.date=`August ${s.day}, 2026`;render()});
+  function bind(){    document.querySelectorAll('[data-type]').forEach(b=>b.onclick=()=>{s.type=b.dataset.type;render()});
+    // ABM-V2-83736327 : real date string + fetches real availability, month nav now functional
+    document.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{
+      s.day=parseInt(b.dataset.day,10);
+      s.date=`${monthNames[s.viewMonth]} ${s.day}, ${s.viewYear}`;
+      s.time=null;
+      fetchAvailableTimes(s.viewYear,s.viewMonth,s.day);
+    });
+    const prevMonth=document.getElementById('prevMonth');
+    if(prevMonth) prevMonth.onclick=()=>{
+      s.viewMonth--; if(s.viewMonth<0){s.viewMonth=11;s.viewYear--;}
+      s.day=null; s.time=null; s.availableTimes=[];
+      render();
+    };
+    const nextMonth=document.getElementById('nextMonth');
+    if(nextMonth) nextMonth.onclick=()=>{
+      s.viewMonth++; if(s.viewMonth>11){s.viewMonth=0;s.viewYear++;}
+      s.day=null; s.time=null; s.availableTimes=[];
+      render();
+    };
     document.querySelectorAll('[data-time]').forEach(b=>b.onclick=()=>{s.time=b.dataset.time;render()});
     document.querySelectorAll('[data-duration]').forEach(b=>b.onclick=()=>{s.duration=b.dataset.duration;render()});
+    document.querySelectorAll('[data-location]').forEach(b=>b.onclick=()=>{s.location=b.dataset.location;render()}); // ABM-V1-83736312
 
     const next=document.getElementById('next');
     if(next) next.onclick=()=>{s.step++;render()};
@@ -194,17 +434,106 @@ textarea{min-height:90px;resize:vertical}
     const form=document.getElementById('form');
     if(form) form.onsubmit=e=>{
       e.preventDefault();
-      s.name=document.getElementById('name').value.trim();
-      s.org=document.getElementById('org').value.trim();
-      s.email=document.getElementById('email').value.trim();
-      s.phone=document.getElementById('phone').value.trim();
-      s.notes=document.getElementById('notes').value.trim();
-      s.step=3;
+      const name=document.getElementById('name').value.trim();
+      const org=document.getElementById('org').value.trim();
+      const email=document.getElementById('email').value.trim();
+      const phone=document.getElementById('phone').value.trim();
+      const notes=document.getElementById('notes').value.trim();
+      submitMeetingRequest(name,org,email,phone,notes);
+    };
+    /* === END: ARTIMEET FORM SUBMIT (GUEST) === */
+
+    /* === START: ARTIMEET REQUEST BUTTON (LOGGED IN) === */
+    const requestMeetingLoggedIn=document.getElementById('requestMeetingLoggedIn');
+    if(requestMeetingLoggedIn) requestMeetingLoggedIn.onclick=()=>{
+      const notesEl=document.getElementById('notes');
+      const notes=notesEl?notesEl.value.trim():'';
+      submitMeetingRequest(s.account.name,s.account.org,s.account.email,s.account.phone,notes);
+    };
+
+    // ABM-V5-83736607 : "View Request" now points to the scoped My Request view instead of the internal admin panel
+
+    const createAccount=document.getElementById('createAccount');
+    if(createAccount) createAccount.onclick=()=>{s.step=4;render()};
+
+    // ABM-V6-83736703
+    const goHomeFromConfirm=document.getElementById('goHomeFromConfirm');
+    if(goHomeFromConfirm) goHomeFromConfirm.onclick=()=>{s.view='home';render()};
+
+    // ABM-V5-83736612
+    const skipAccount=document.getElementById('skipAccount');
+    if(skipAccount) skipAccount.onclick=()=>{s.step=0;s.view='flow';
+      s.name='';s.org='';s.email='';s.phone='';s.notes='';
+      s.day=null;s.date=null;s.time=null;
       render();
     };
 
-    const vr=document.getElementById('viewRequest');
-    if(vr) vr.onclick=showAdmin;
+    // ABM-V7-83736802 : account object no longer stores password (there is none)
+    const acctForm=document.getElementById('acctForm');
+    if(acctForm) acctForm.onsubmit=e=>{
+      e.preventDefault();
+      /* === START: ARTIMEET NICKNAME CAPTURE === */
+      const acctNickname=document.getElementById('acctNickname').value.trim();
+      /* === END: ARTIMEET NICKNAME CAPTURE === */
+      const acctEmail=document.getElementById('acctEmail').value.trim();
+      // ABM-V5-83736611 : TODO(backend) — real account creation, email-only (magic link / OTP), no password
+      s.account={name:acctNickname,email:acctEmail,org:s.org,phone:s.phone,timezone:s.timezone};
+      s.view='home';
+      render();
+    };
+
+    const signInLink=document.getElementById('signInLink');
+    if(signInLink) signInLink.onclick=e=>{
+      e.preventDefault();
+      alert('TODO: route to existing sign-in flow.');
+    };
+
+    // ABM-V7-83736803 : bind hooks for Home / My Meetings / My Profile views
+    const goNewRequest=document.getElementById('goNewRequest');
+    if(goNewRequest) goNewRequest.onclick=()=>{s.view='flow';s.step=0;render()};
+    const goNewRequest2=document.getElementById('goNewRequest2');
+    if(goNewRequest2) goNewRequest2.onclick=()=>{s.view='flow';s.step=0;render()};
+    const goMyMeetings=document.getElementById('goMyMeetings');
+    if(goMyMeetings) goMyMeetings.onclick=()=>{s.view='myMeetings';render()};
+    const goMyProfile=document.getElementById('goMyProfile');
+    if(goMyProfile) goMyProfile.onclick=()=>{s.view='myProfile';render()};
+    const backHome=document.getElementById('backHome');
+    if(backHome) backHome.onclick=()=>{s.view='home';render()};
+    const backHome2=document.getElementById('backHome2');
+    if(backHome2) backHome2.onclick=()=>{s.view='home';render()};
+
+    /* === START: ARTIMEET PROFILE EDIT BIND === */
+    const editProfile=document.getElementById('editProfile');
+    if(editProfile) editProfile.onclick=()=>{s.editingProfile=true;render()};
+    const cancelEditProfile=document.getElementById('cancelEditProfile');
+    if(cancelEditProfile) cancelEditProfile.onclick=()=>{s.editingProfile=false;render()};
+    const cancelEditProfile2=document.getElementById('cancelEditProfile2');
+    if(cancelEditProfile2) cancelEditProfile2.onclick=()=>{s.editingProfile=false;render()};
+    const profileForm=document.getElementById('profileForm');
+    if(profileForm) profileForm.onsubmit=e=>{
+      e.preventDefault();
+      const pfName=document.getElementById('pfName').value.trim();
+      const pfOrg=document.getElementById('pfOrg').value.trim();
+      const pfPhone=document.getElementById('pfPhone').value.trim();
+      const pfTimezone=document.getElementById('pfTimezone').value.trim();
+      // TODO(backend): PATCH /api/account — persist updated profile fields
+      s.account={...s.account,name:pfName,org:pfOrg,phone:pfPhone,timezone:pfTimezone};
+      s.editingProfile=false;
+      render();
+    };
+    /* === END: ARTIMEET PROFILE EDIT BIND === */
+    const signOut=document.getElementById('signOut');
+    if(signOut) signOut.onclick=()=>{s.account=null;s.view='flow';s.step=0;render()};
+    const signOut2=document.getElementById('signOut2');
+    if(signOut2) signOut2.onclick=()=>{s.account=null;s.view='flow';s.step=0;render()};
+    document.querySelectorAll('[data-ics]').forEach(b=>b.onclick=()=>{
+      const m=s.meetings.find(x=>x.meetingId===b.dataset.ics);
+      if(m) downloadIcs(m);
+    });
+
+    // ABM-V5-83736608 : .ics logic now shared (downloadIcs) so both confirmation screen and My Request use the same code
+    const ac=document.getElementById('addCalendar');
+    if(ac) ac.onclick=()=>downloadIcs({meetingId:s.meetingId,type:s.type,location:s.location});
 
     const nr=document.getElementById('newRequest');
     if(nr) nr.onclick=()=>{s.step=0;render()};
@@ -216,17 +545,24 @@ textarea{min-height:90px;resize:vertical}
     adminView.innerHTML=`
       <div class="panel">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-          <div><div class="eyebrow">Internal ArtiByte</div><h2>Meeting Requests</h2><div class="sub">Manage requests, confirmations and scheduling.</div></div>
+          <!-- ABM-V1-83736319 -->
+          <div><div class="eyebrow">Internal Artimeet</div><h2>Meeting Requests</h2><div class="sub">Manage requests, confirmations and scheduling.</div></div>
           <button class="btn" id="publicBtn">← Public view</button>
         </div>
+        <!-- ABM-V1-83736309 : request status vs calendar status shown as separate pills -->
         <div class="req">
           <div class="reqhead">
-            <div><b>${s.time} · ${s.name||'Juan Dela Cruz'}</b><small>${s.org||'ABC Company'} · ${s.type}</small></div>
-            <span class="pill" id="status">Pending</span>
+            <div><b>${s.meetingId||'ABM-2026-0042'} · ${s.time||'2:00 PM'} · ${s.name||'Juan Dela Cruz'}</b><small>${s.org||'ABC Company'} · ${s.type} · ${s.location}</small></div>
+            <div class="pillrow">
+              <span class="pill" id="reqStatus">${s.requestStatus}</span>
+              <span class="pill ${s.calendarStatus==='Synced'?'green':'gray'}" id="calStatus">${s.calendarStatus}</span>
+            </div>
           </div>
           <div class="reqactions">
             <button class="btn primary" id="confirm">Confirm</button>
-            <button class="btn" id="reschedule">Reschedule</button>
+            <button class="btn" id="reviewing">Mark Reviewing</button>
+            <button class="btn" id="reschedule">Reschedule Requested</button>
+            <button class="btn" id="cancel">Cancel</button>
           </div>
         </div>
         <div class="req">
@@ -241,21 +577,33 @@ textarea{min-height:90px;resize:vertical}
       render();
     };
 
+    // ABM-V1-83736310
+    function setReqStatus(v,cls){
+      document.getElementById('reqStatus').textContent=v;
+      document.getElementById('reqStatus').className='pill '+cls;
+    }
     document.getElementById('confirm').onclick=()=>{
-      document.getElementById('status').textContent='Confirmed';
-      document.getElementById('status').className='pill green';
-      document.getElementById('confirm').disabled=true;
-      document.getElementById('confirm').textContent='✓ Confirmed';
+      setReqStatus('Confirmed','green');
+      s.calendarStatus='Synced';
+      document.getElementById('calStatus').textContent='Synced';
+      document.getElementById('calStatus').className='pill green';
     };
-
+    document.getElementById('reviewing').onclick=()=>setReqStatus('Reviewing','blue');
     document.getElementById('reschedule').onclick=()=>{
-      alert('Reschedule flow placeholder — connect this action to Google Calendar or Outlook in production.');
+      setReqStatus('Reschedule Requested','purple');
+      alert('TODO(backend): trigger reschedule workflow / calendar hold release.');
     };
+    document.getElementById('cancel').onclick=()=>setReqStatus('Cancelled','gray');
   }
 
-  document.getElementById('menu').onclick=showAdmin;
-  render();
+  // ABM-V1-83736307 : TODO(auth) — swap this for a real authenticated /internal route
+  if(new URLSearchParams(location.search).get('internal')==='1'){
+    showAdmin();
+  } else {
+    render();
+  }
 })();
 </script>
 </body>
 </html>
+
