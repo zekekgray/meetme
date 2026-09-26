@@ -1,0 +1,211 @@
+/* === START: ARTIMEET CONFIG === */
+// TODO(Efrenster): paste your Google Sheet ID here. Leave blank to use
+// whatever Sheet this script is bound to (Extensions > Apps Script).
+const SHEET_ID = '';
+const ACCOUNTS_SHEET = 'Accounts';
+const MEETINGS_SHEET = 'Meetings';
+/* === END: ARTIMEET CONFIG === */
+
+/* === START: ARTIMEET DOGET ROUTER ===
+   Apps Script web apps can't do real path routing (no artimeet.com/@efren).
+   We simulate it with a query param instead: .../exec?u=efren
+   doGet reads that, and the frontend (Scripts.html) uses HOST_HANDLE to
+   decide whether this is "someone's booking page" or the generic homepage. */
+function doGet(e) {
+  const handle = ((e && e.parameter && e.parameter.u) || '').toLowerCase().trim();
+  const internal = ((e && e.parameter && e.parameter.internal) || '') === '1';
+  const template = HtmlService.createTemplateFromFile('Index');
+  template.hostHandle = handle;
+  template.adminMode = internal;
+  template.appUrl = ScriptApp.getService().getUrl(); // used client-side to build shareable ?u= links
+  return template.evaluate()
+    .setTitle('Artimeet')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function include(filename) {
+  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+}
+/* === END: ARTIMEET DOGET ROUTER === */
+
+/* === START: ARTIMEET ONOPEN MENU (Sheet UI shortcut to launch the app) ===
+   Adds an "Artimeet" menu to this Sheet that opens the actual app —
+   not just a link — inside a modal dialog. Reuses the same Index
+   template doGet() uses, so it's the real, live app running on your
+   Sheets data. */
+function onOpen(e) {
+  SpreadsheetApp.getUi()
+    .createMenu('Artimeet')
+    .addItem('Open Artimeet App', 'openArtimeetApp')
+    .addItem('Open Admin Panel', 'openArtimeetAdmin')
+    .addToUi();
+}
+
+function openArtimeetApp() {
+  showArtimeetModal_('', false, 'Artimeet');
+}
+
+function openArtimeetAdmin() {
+  showArtimeetModal_('', true, 'Artimeet — Admin');
+}
+
+function showArtimeetModal_(handle, adminMode, title) {
+  const template = HtmlService.createTemplateFromFile('Index');
+  template.hostHandle = handle;
+  template.adminMode = adminMode;
+  template.appUrl = ScriptApp.getService().getUrl() || '';
+  const html = template.evaluate().setWidth(1000).setHeight(700);
+  SpreadsheetApp.getUi().showModalDialog(html, title);
+}
+/* === END: ARTIMEET ONOPEN MENU === */
+
+/* === START: ARTIMEET SHEET HELPERS === */
+function getSpreadsheet_() {
+  return SHEET_ID ? SpreadsheetApp.openById(SHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
+}
+
+function getSheet_(name) {
+  const ss = getSpreadsheet_();
+  let sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+    if (name === ACCOUNTS_SHEET) {
+      sheet.appendRow(['handle', 'name', 'email', 'org', 'phone', 'timezone', 'createdAt']);
+    }
+    if (name === MEETINGS_SHEET) {
+      sheet.appendRow(['meetingId', 'hostHandle', 'guestName', 'guestEmail', 'guestOrg', 'guestPhone',
+        'notes', 'type', 'date', 'time', 'duration', 'location', 'requestStatus', 'calendarStatus', 'createdAt']);
+    }
+  }
+  return sheet;
+}
+
+// Row -> plain object, keyed by header row. Skips blank rows.
+function sheetToObjects_(sheet) {
+  const data = sheet.getDataRange().getValues();
+  if (data.length < 2) return [];
+  const headers = data[0];
+  return data.slice(1)
+    .filter(row => row[0] !== '' && row[0] !== undefined && row[0] !== null)
+    .map(row => {
+      const obj = {};
+      headers.forEach((h, i) => { obj[h] = row[i]; });
+      return obj;
+    });
+}
+/* === END: ARTIMEET SHEET HELPERS === */
+
+/* === START: ARTIMEET ACCOUNT FUNCTIONS === */
+// Public: loads a host's public info for their booking page (name/org shown to guests).
+function getHostByHandle(handle) {
+  handle = (handle || '').toLowerCase().trim();
+  if (!handle) return null;
+  const accounts = sheetToObjects_(getSheet_(ACCOUNTS_SHEET));
+  const found = accounts.find(a => String(a.handle).toLowerCase() === handle);
+  return found || null;
+}
+
+function isHandleTaken(handle) {
+  return !!getHostByHandle(handle);
+}
+
+// data: { handle, name, email, org, phone, timezone }
+function createAccount(data) {
+  const handle = String(data.handle || '').toLowerCase().trim().replace(/[^a-z0-9._-]/g, '');
+  if (!handle) throw new Error('Please choose a handle (letters, numbers, ., _ or - only).');
+  if (isHandleTaken(handle)) throw new Error('That handle is already taken — please pick another.');
+  const sheet = getSheet_(ACCOUNTS_SHEET);
+  sheet.appendRow([handle, data.name || '', data.email || '', data.org || '', data.phone || '', data.timezone || '', new Date()]);
+  return getHostByHandle(handle);
+}
+
+// Lightweight "sign in": since there's no password, we just confirm the
+// handle + email pair matches an existing account. Good enough for now;
+// swap for real auth later.
+function signInAccount(handle, email) {
+  const account = getHostByHandle(handle);
+  if (!account) throw new Error('No account found for that handle.');
+  if (String(account.email).toLowerCase().trim() !== String(email).toLowerCase().trim()) {
+    throw new Error('Email does not match that handle.');
+  }
+  return account;
+}
+
+// data: any of { name, org, phone, timezone } — email/handle are not editable here.
+function updateAccount(handle, data) {
+  handle = (handle || '').toLowerCase().trim();
+  const sheet = getSheet_(ACCOUNTS_SHEET);
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0];
+  const handleCol = headers.indexOf('handle');
+  for (let r = 1; r < values.length; r++) {
+    if (String(values[r][handleCol]).toLowerCase() === handle) {
+      const rowNum = r + 1;
+      ['name', 'org', 'phone', 'timezone'].forEach(field => {
+        const col = headers.indexOf(field);
+        if (col > -1 && data[field] !== undefined) {
+          sheet.getRange(rowNum, col + 1).setValue(data[field]);
+        }
+      });
+      return getHostByHandle(handle);
+    }
+  }
+  throw new Error('Account not found.');
+}
+/* === END: ARTIMEET ACCOUNT FUNCTIONS === */
+
+/* === START: ARTIMEET MEETING FUNCTIONS === */
+// data: { hostHandle, name, email, org, phone, notes, type, date, time, duration, location }
+function saveMeeting(data) {
+  const sheet = getSheet_(MEETINGS_SHEET);
+  const meetingId = 'ABM-' + new Date().getFullYear() + '-' + Utilities.getUuid().slice(0, 4).toUpperCase();
+  sheet.appendRow([
+    meetingId,
+    (data.hostHandle || '').toLowerCase().trim(),
+    data.name || '', data.email || '', data.org || '', data.phone || '',
+    data.notes || '', data.type || '', data.date || '', data.time || '',
+    data.duration || '', data.location || '',
+    'Requested', 'Not synced', new Date()
+  ]);
+  return { meetingId: meetingId, requestStatus: 'Requested', calendarStatus: 'Not synced' };
+}
+
+// A guest's own request history — looked up by email, since guests don't have accounts.
+function getMeetingsForGuestEmail(email) {
+  email = (email || '').toLowerCase().trim();
+  if (!email) return [];
+  return sheetToObjects_(getSheet_(MEETINGS_SHEET))
+    .filter(m => String(m.guestEmail).toLowerCase() === email);
+}
+
+// A host's incoming requests on their own booking page.
+function getMeetingsForHost(handle) {
+  handle = (handle || '').toLowerCase().trim();
+  if (!handle) return [];
+  return sheetToObjects_(getSheet_(MEETINGS_SHEET))
+    .filter(m => String(m.hostHandle).toLowerCase() === handle);
+}
+
+// Internal admin only (gated client-side by ?internal=1 for now — TODO(auth)).
+function getAllMeetings() {
+  return sheetToObjects_(getSheet_(MEETINGS_SHEET));
+}
+
+function updateMeetingStatus(meetingId, status) {
+  const sheet = getSheet_(MEETINGS_SHEET);
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0];
+  const idCol = headers.indexOf('meetingId');
+  const statusCol = headers.indexOf('requestStatus');
+  const calCol = headers.indexOf('calendarStatus');
+  for (let r = 1; r < values.length; r++) {
+    if (values[r][idCol] === meetingId) {
+      sheet.getRange(r + 1, statusCol + 1).setValue(status);
+      if (status === 'Confirmed') sheet.getRange(r + 1, calCol + 1).setValue('Synced');
+      return true;
+    }
+  }
+  throw new Error('Meeting not found.');
+}
+/* === END: ARTIMEET MEETING F
