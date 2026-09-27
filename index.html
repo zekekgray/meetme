@@ -221,12 +221,35 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (() => {
-  // ── SUPABASE CONFIG ──
+  // ABM-FLAG : toggle this to bring back account creation / sign-in later.
+  // false = guest-only mode: no landing screen, no sign up/sign in, straight to booking.
+  const AUTH_ENABLED = false;
+
+  // ── SUPABASE CONFIG ── (kept dormant — only used if AUTH_ENABLED is flipped back on later)
   const SUPABASE_URL = 'https://mvjkeybubkikieswhdid.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_tpBXa1V-jn38xmy2OfnTbA_1PE8Xi8N';
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:false }
   });
+
+  // ── APPS SCRIPT CONFIG ── (this is the real backend now, while AUTH_ENABLED=false)
+  // TODO(Efrenster): paste your deployed Web App /exec URL here.
+  // Deploy > New deployment > Web app > Execute as: Me > Who has access: Anyone
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWRdzNYWWHViN9SMxE9JIueGUqtViSUgi7BwB8uhRj5VxR7ksjxBqJpXxSKNgu1deb/exec';
+
+  // ABM-APPSCRIPT : calls the Code.gs doPost router. Uses text/plain on purpose —
+  // it keeps this a CORS "simple request" so the browser never fires a preflight
+  // OPTIONS call, which Apps Script doesn't handle. Throws on any backend error.
+  async function callBackend(action, payload){
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method:'POST',
+      headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, payload: payload||{} })
+    });
+    const json = await res.json();
+    if(!json.success) throw new Error(json.error || 'Request failed');
+    return json.data;
+  }
 
   const publicView=document.getElementById('public');
   const adminView=document.getElementById('admin');
@@ -255,7 +278,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     guestDeviceId:null, // stable per-browser id so a guest's requests can be claimed later on signup
     account:null, // null = guest. Once "created": { name, email, org, phone, timezone }
     meetings:[],  // this user's own requests only — never other people's
-    view:'landing', // 'landing' | 'flow' | 'home' | 'account' | 'myMeetings' (Activity) | 'meetingDetail' | 'myProfile' | 'notifications' | 'settings' | 'privacyData' | 'signInEmail' | 'otp'
+    view: AUTH_ENABLED ? 'landing' : 'flow', // 'landing' | 'flow' | 'home' | 'account' | 'myMeetings' (Activity) | 'meetingDetail' | 'myProfile' | 'notifications' | 'settings' | 'privacyData' | 'signInEmail' | 'otp'
     editingProfile:false,
     // === START: ARTIMEET ACCOUNT SYSTEM STATE ===
     activityTab:'upcoming',     // 'upcoming' | 'past' | 'cancelled' — filters the Activity list
@@ -605,7 +628,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
   }
 
   function startResendCooldown(){
-    s.resendCooldown=30;
+    s.resendCooldown=60;
     const tick=()=>{
       s.resendCooldown--;
       if(document.getElementById('resendOtp')||document.getElementById('resendCooldownLabel')) render();
@@ -616,7 +639,10 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
 
   async function resendOtp(){
     if(s.resendCooldown>0 || s.authLoading) return;
-    await sendOtp(s.authEmail, s.otpMode==='signup');
+    const signupData = s.otpMode==='signup'
+      ? { name:s.authNickname, org:s.org, phone:s.phone, timezone:s.timezone }
+      : undefined;
+    await sendOtp(s.authEmail, s.otpMode==='signup', signupData);
   }
 
   // ABM-V13 : in-button loading→success sequence.
@@ -661,64 +687,32 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     }));
   }
 
-  // ABM-V13 : does the actual save and THROWS on failure — the caller (runRequestButtonSequence)
+  // ABM-APPSCRIPT : does the actual save and THROWS on failure — the caller (runRequestButtonSequence)
   // decides what the button/UI does with that; this function no longer touches s.step itself.
   async function saveMeetingRequest(name,org,email,phone,notes){
     s.name=name; s.org=org; s.email=email; s.phone=phone; s.notes=notes;
-    s.meetingId='ABM-'+now.getFullYear()+'-'+Math.floor(1000+Math.random()*9000);
 
-    // ABM-GUEST : every request — guest or signed-in — saves to Supabase immediately, so
-    // ArtiByte sees it in the internal dashboard right away. Guests get a guest_device_id
-    // instead of a user_id (no account/password required).
-    const isGuest = !(s.account && s.account.id);
-    if(isGuest && !s.guestDeviceId) s.guestDeviceId = getGuestDeviceId();
+    const result = await callBackend('saveMeeting', {
+      hostHandle: 'artibyte', // ABM-APPSCRIPT : single internal tenant for now — see AUTH_ENABLED note
+      name: name, email: email, org: org, phone: phone, notes: notes,
+      type: s.type, date: s.date, time: s.time, duration: s.duration, location: s.location
+    });
 
-    const row = {
-      user_id: isGuest ? null : s.account.id,
-      guest_device_id: isGuest ? s.guestDeviceId : null,
-      meeting_ref: s.meetingId,
+    s.meetingId = result.meetingId;
+    s.requestStatus = result.requestStatus || 'Requested';
+    s.calendarStatus = result.calendarStatus || 'Not synced';
+
+    s.meetings.push({
+      meetingId: s.meetingId,
+      date: s.date,
+      time: s.time,
       type: s.type,
-      meeting_date: s.date,
-      meeting_time: s.time,
-      duration: s.duration,
       location: s.location,
-      notes: notes,
-      guest_name: isGuest ? name : null,
-      guest_org: isGuest ? org : null,
-      guest_email: isGuest ? email : null,
-      guest_phone: isGuest ? phone : null,
-      status: 'Requested',
-      calendar_status: 'Not synced',
-      owner: 'ARTIBYTE',
-      source: 'PUBLIC_WEBSITE',
-      assigned_to: null
-    };
-
-    const { data, error } = await sb.from('meetings').insert(row).select().single();
-    if(error) throw new Error(error.message);
-
-    if(isGuest){
-      // No RLS-scoped session to re-query as a guest — keep the confirmed row locally too.
-      s.meetings.push({
-        meetingId:s.meetingId,
-        date:s.date,
-        time:s.time,
-        type:s.type,
-        location:s.location,
-        requestStatus:data.status||'Requested'
-      });
-    } else {
-      await loadMyMeetings();
-    }
+      requestStatus: s.requestStatus
+    });
 
     saveSession();
-    notifyBackend('requested', {
-      meetingId:s.meetingId, type:s.type, date:s.date, time:s.time,
-      duration:s.duration, location:s.location, name:name, org:org,
-      email:email, phone:phone, notes:notes
-    });
   }
-
   // ── EMAIL NOTIFICATIONS (Supabase Edge Function → Resend) ──────────────
   // TODO(you): deploy the "notify-meeting" Edge Function and set your RESEND_API_KEY
   // secret on Supabase before this will actually send mail.
@@ -1198,11 +1192,13 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
         </div>
         <button class="btn primary full" id="addGoogleCalendar">＋ Add to Google Calendar</button>
         <button class="btn secondary full" id="addCalendar" style="margin-top:8px">Download .ics (Apple / Outlook)</button>
-        ${s.account ? `` : `
+        ${(!s.account && AUTH_ENABLED) ? `
           <div class="sub" style="margin-top:24px;font-weight:750;color:var(--ink)">Want to manage your meetings?</div>
           <div class="sub" style="margin-top:4px">Create an account to view requests, reschedule, cancel, and keep your info for future meetings.</div>
           <button class="btn secondary full" id="createAccount">Create an Artimeet account</button>
           <button class="btn ghost full" id="newRequest">Continue without an account</button>
+        ` : `
+          <button class="btn ghost full" id="newRequest" style="margin-top:24px">Book another meeting</button>
         `}
       </div>`;
     }
@@ -1317,7 +1313,8 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     if(backFromStep0) backFromStep0.onclick=()=>{
       haptic('light');
       if(s.account){ s.view='home'; render(); }
-      else { resetRequestFlow(); s.view='landing'; render(); }
+      else if(AUTH_ENABLED){ resetRequestFlow(); s.view='landing'; render(); }
+      else { resetRequestFlow(); render(); } // stays on step 0 — nowhere else to go in guest-only mode
     };
     // === END: ARTIMEET BACKPILL HANDLER — STEP0 ===
 
@@ -1350,7 +1347,8 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     if(backFromConfirm) backFromConfirm.onclick=()=>{
       haptic('light');
       if(s.account){ s.view='home'; render(); }
-      else { resetRequestFlow(); s.view='landing'; render(); }
+      else if(AUTH_ENABLED){ resetRequestFlow(); s.view='landing'; render(); }
+      else { resetRequestFlow(); s.step=0; render(); }
     };
     // === END: ARTIMEET BACKPILL HANDLER — CONFIRM ===
 
@@ -1610,6 +1608,69 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     }
   }
 
+  // === START: ARTIMEET ADMIN — LIVE SHEET DATA ===
+  let _adminMeetings=[];
+
+  function statusClass(status){
+    if(status==='Confirmed') return 'green';
+    if(status==='Reviewing') return 'blue';
+    if(status==='Reschedule Requested') return 'purple';
+    if(status==='Cancelled') return 'gray';
+    return '';
+  }
+
+  function renderAdminList(){
+    const listEl=document.getElementById('adminList');
+    if(!listEl) return;
+    if(_adminMeetings.length===0){
+      listEl.innerHTML=`<div class="sub" style="text-align:center;padding:30px 0">No meeting requests yet.</div>`;
+      return;
+    }
+    listEl.innerHTML=_adminMeetings.map(m=>`
+      <div class="req">
+        <div class="reqhead">
+          <div><b>${m.meetingId} · ${m.date} · ${m.time}</b><small>${m.guestName||'—'}${m.guestOrg?' · '+m.guestOrg:''} · ${m.type} · ${m.location}</small></div>
+          <div class="pillrow"><span class="pill ${statusClass(m.requestStatus)}">${m.requestStatus}</span></div>
+        </div>
+        <div class="reqactions">
+          <button class="btn primary" data-action="Confirmed" data-id="${m.meetingId}">Confirm</button>
+          <button class="btn" data-action="Reviewing" data-id="${m.meetingId}">Mark Reviewing</button>
+          <button class="btn" data-action="Reschedule Requested" data-id="${m.meetingId}">Reschedule Requested</button>
+          <button class="btn" data-action="Cancelled" data-id="${m.meetingId}">Cancel</button>
+        </div>
+      </div>
+    `).join('');
+
+    listEl.querySelectorAll('[data-action]').forEach(btn=>{
+      btn.onclick=async ()=>{
+        const meetingId=btn.dataset.id;
+        const status=btn.dataset.action;
+        btn.disabled=true;
+        try{
+          await callBackend('updateMeetingStatus', { meetingId, status });
+          haptic(status==='Cancelled'?'warning':'success');
+          await loadAdminMeetings();
+        }catch(err){
+          alert('Could not update status: '+(err.message||'Please try again.'));
+          btn.disabled=false;
+        }
+      };
+    });
+  }
+
+  async function loadAdminMeetings(){
+    const listEl=document.getElementById('adminList');
+    if(listEl) listEl.innerHTML=`<div class="sub" style="text-align:center;padding:30px 0">Loading requests…</div>`;
+    try{
+      _adminMeetings = await callBackend('getAllMeetings', {});
+      _adminMeetings.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
+    }catch(err){
+      if(listEl) listEl.innerHTML=`<div class="sub" style="text-align:center;padding:30px 0;color:#c0392b">Could not load requests: ${err.message||'unknown error'}</div>`;
+      return;
+    }
+    renderAdminList();
+  }
+
   function showAdmin(){
     publicView.style.display='none';
     adminView.classList.add('show');
@@ -1617,23 +1678,12 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
       <div class="panel">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
           <div><div class="eyebrow">Internal Artimeet</div><h2>Meeting Requests</h2><div class="sub">Manage requests, confirmations and scheduling.</div></div>
-          <button class="btn" id="publicBtn">← Public view</button>
-        </div>
-        <div class="req">
-          <div class="reqhead">
-            <div><b>${s.meetingId||'(no request yet)'} · ${s.time||'—'} · ${s.name||'—'}</b><small>${s.org||'—'} · ${s.type} · ${s.location}</small></div>
-            <div class="pillrow">
-              <span class="pill" id="reqStatus">${s.requestStatus}</span>
-              <span class="pill ${s.calendarStatus==='Synced'?'green':'gray'}" id="calStatus">${s.calendarStatus}</span>
-            </div>
-          </div>
-          <div class="reqactions">
-            <button class="btn primary" id="confirm">Confirm</button>
-            <button class="btn" id="reviewing">Mark Reviewing</button>
-            <button class="btn" id="reschedule">Reschedule Requested</button>
-            <button class="btn" id="cancel">Cancel</button>
+          <div style="display:flex;gap:8px">
+            <button class="btn" id="refreshAdmin">↻ Refresh</button>
+            <button class="btn" id="publicBtn">← Public view</button>
           </div>
         </div>
+        <div id="adminList" style="margin-top:14px"></div>
       </div>`;
 
     document.getElementById('publicBtn').onclick=()=>{
@@ -1641,33 +1691,11 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
       publicView.style.display='block';
       render();
     };
+    document.getElementById('refreshAdmin').onclick=()=>{ haptic('light'); loadAdminMeetings(); };
 
-    function setReqStatus(v,cls){
-      document.getElementById('reqStatus').textContent=v;
-      document.getElementById('reqStatus').className='pill '+cls;
-    }
-    document.getElementById('confirm').onclick=()=>{
-      setReqStatus('Confirmed','green');
-      s.calendarStatus='Synced';
-      document.getElementById('calStatus').textContent='Synced';
-      document.getElementById('calStatus').className='pill green';
-      notifyBackend('confirmed', {meetingId:s.meetingId, type:s.type, date:s.date, time:s.time, location:s.location, email:s.email, name:s.name});
-    };
-    document.getElementById('reviewing').onclick=()=>{
-      setReqStatus('Reviewing','blue');
-      notifyBackend('reviewing', {meetingId:s.meetingId, type:s.type, date:s.date, time:s.time, location:s.location, email:s.email, name:s.name});
-    };
-    document.getElementById('reschedule').onclick=()=>{
-      setReqStatus('Reschedule Requested','purple');
-      notifyBackend('reschedule', {meetingId:s.meetingId, type:s.type, date:s.date, time:s.time, location:s.location, email:s.email, name:s.name});
-      alert('TODO(backend): trigger reschedule workflow / calendar hold release.');
-    };
-    document.getElementById('cancel').onclick=()=>{
-      haptic('warning');
-      setReqStatus('Cancelled','gray');
-      notifyBackend('cancelled', {meetingId:s.meetingId, type:s.type, date:s.date, time:s.time, location:s.location, email:s.email, name:s.name});
-    };
+    loadAdminMeetings();
   }
+  // === END: ARTIMEET ADMIN — LIVE SHEET DATA ===
 
   // ABM-V10-83737105 : restore cached meetings from localStorage on load (fast paint only)
   loadSession();
@@ -1683,17 +1711,19 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     hideSplash();
   } else {
     render();
-    // ABM-AUTH : reconcile with the real Supabase session — this is the actual
-    // "session restoration after refresh" step (overrides the render() above once resolved).
-    // The splash stays up at least MIN_SPLASH_MS so it never looks like a flicker on fast
-    // connections, and clears right after — this is also what hides the brief re-login flash.
-    const splashStart=Date.now();
-    const MIN_SPLASH_MS=700;
-    restoreSupabaseSession().then(()=>{
-      const elapsed=Date.now()-splashStart;
-      const wait=Math.max(0, MIN_SPLASH_MS-elapsed);
-      setTimeout(hideSplash, wait);
-    });
+    if(AUTH_ENABLED){
+      // ABM-AUTH : reconcile with the real Supabase session — only runs once AUTH_ENABLED
+      // is flipped back on. While off, we skip this entirely so nothing depends on Supabase.
+      const splashStart=Date.now();
+      const MIN_SPLASH_MS=700;
+      restoreSupabaseSession().then(()=>{
+        const elapsed=Date.now()-splashStart;
+        const wait=Math.max(0, MIN_SPLASH_MS-elapsed);
+        setTimeout(hideSplash, wait);
+      });
+    } else {
+      setTimeout(hideSplash, 500);
+    }
   }
 })();
 </script>
