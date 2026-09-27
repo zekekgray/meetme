@@ -235,7 +235,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
   // ── APPS SCRIPT CONFIG ── (this is the real backend now, while AUTH_ENABLED=false)
   // TODO(Efrenster): paste your deployed Web App /exec URL here.
   // Deploy > New deployment > Web app > Execute as: Me > Who has access: Anyone
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4cs2aWRod28s69km3ZiTQcRjglAGh2bEmxhjuN11OF3Xs23_R44iGX1CRU5I8oDeN/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzPuEiOid7JVwKUUs05xeTp4hMgIlcM1Ay8oibLkZ26Yui7LQ0aXAqnRaj0co5ixhu2/exec';
 
   // ABM-APPSCRIPT : calls the Code.gs doPost router. Uses text/plain on purpose —
   // it keeps this a CORS "simple request" so the browser never fires a preflight
@@ -266,6 +266,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     timeBase:null, // === ARTIMEET MINUTE PRECISION : the picked hour-slot (e.g. "9:00 AM") before minute adjustment ===
     minute:'00',   // === ARTIMEET MINUTE PRECISION : user-picked minute, combined with timeBase to form final s.time ===
     duration:'30 min',
+    recurrence:'One-time', // === ARTIMEET RECURRING MEETINGS : 'One-time' | 'Weekly' | 'Monthly' | 'Quarterly' ===
     location:'Videocall / Virtual Call',
     locationAddress:'',
     timezone:Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -696,7 +697,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     const result = await callBackend('saveMeeting', {
       hostHandle: 'artibyte', // ABM-APPSCRIPT : single internal tenant for now — see AUTH_ENABLED note
       name: name, email: email, org: org, phone: phone, notes: notes,
-      type: s.type, date: s.date, time: s.time, duration: s.duration, location: s.location
+      type: s.type, date: s.date, time: s.time, duration: s.duration, location: s.location, recurrence: s.recurrence
     });
 
     s.meetingId = result.meetingId;
@@ -710,6 +711,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
       time: s.time,
       type: s.type,
       location: s.location,
+      recurrence: s.recurrence,
       requestStatus: s.requestStatus
     });
 
@@ -739,7 +741,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
   function resetRequestFlow(){
     s.type=null;
     s.day=null; s.date=null; s.time=null; s.timeBase=null; s.minute='00';
-    s.duration='30 min'; s.location='Videocall / Virtual Call';
+    s.duration='30 min'; s.recurrence='One-time'; s.location='Videocall / Virtual Call';
     s.availableTimes=[]; s.loadingTimes=false;
     s.name=''; s.org=''; s.email=''; s.phone=''; s.notes='';
     s.meetingId=''; s.meetingLink=''; s.requestStatus='Requested'; s.calendarStatus='Not synced';
@@ -835,7 +837,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
       ` : filtered.map(m=>`
         <div class="req" data-meeting="${m.meetingId}" style="cursor:pointer">
           <div class="reqhead">
-            <div><b>${m.meetingId} · ${m.date} · ${m.time}</b><small>${m.type} · ${m.location}</small></div>
+            <div><b>${m.meetingId} · ${m.date} · ${m.time}</b><small>${m.type} · ${m.location}${(m.recurrence && m.recurrence!=='One-time') ? ' · 🔁 '+m.recurrence : ''}</small></div>
             <div class="pillrow"><span class="pill ${m.requestStatus==='Confirmed'?'green':m.requestStatus==='Reviewing'?'blue':m.requestStatus==='Cancelled'?'gray':''}">${m.requestStatus}</span></div>
           </div>
           <div class="reqactions"><button class="btn" data-gcal="${m.meetingId}">＋ Google Calendar</button><button class="btn" data-ics="${m.meetingId}">Download .ics</button></div>
@@ -862,6 +864,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
         <div class="row"><b>Date</b><span>${m.date}</span></div>
         <div class="row"><b>Time</b><span>${m.time}</span></div>
         <div class="row"><b>Type</b><span>${m.type}</span></div>
+        ${(m.recurrence && m.recurrence!=='One-time') ? `<div class="row"><b>Repeats</b><span>${m.recurrence}</span></div>` : ''}
         <div class="row"><b>Location</b><span>${m.location}</span></div>
         <div class="row"><b>Status</b><span class="pill ${m.requestStatus==='Confirmed'?'green':m.requestStatus==='Reviewing'?'blue':m.requestStatus==='Cancelled'?'gray':''}">${m.requestStatus}</span></div>
       </div>
@@ -1111,6 +1114,11 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
         <div style="margin-top:20px;font-weight:750">Duration</div>
         <div class="duration duration-pills">${['30 min','45 min','60 min','Flexible'].map(d=>`<button class="btn ${s.duration===d?'active':''}" data-duration="${d}">${d}</button>`).join('')}</div>
         ${s.duration==='Flexible' ? `<div class="sub" style="margin-top:8px">We'll settle the exact duration with you once confirmed.</div>` : ''}
+        <!-- === START: ARTIMEET RECURRING MEETINGS === -->
+        <div style="margin-top:20px;font-weight:750">Repeats</div>
+        <div class="duration duration-pills">${['One-time','Weekly','Monthly','Quarterly'].map(r=>`<button class="btn ${s.recurrence===r?'active':''}" data-recurrence="${r}">${r}</button>`).join('')}</div>
+        ${s.recurrence!=='One-time' ? `<div class="sub" style="margin-top:8px">This repeats ${s.recurrence.toLowerCase()} directly on the calendar event once confirmed.</div>` : ''}
+        <!-- === END: ARTIMEET RECURRING MEETINGS === -->
         <div style="margin-top:20px;font-weight:750">Meeting location</div>
         <div class="iconpills">${locations.map(l=>`<button class="iconpill ${s.location===l?'active':''}" data-location="${l}" data-tooltip="${l}" aria-label="${l}">${locationIcons[l]}</button>`).join('')}</div>
         <div class="sub" style="margin-top:8px">${s.location}</div>
@@ -1188,6 +1196,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
           <div class="row"><b><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Time</b><span>${s.time}${s.duration==='Flexible' ? ' · Duration TBD' : ' – '+endTime(s.time,s.duration)} (${formatTimezone(s.timezone)})</span></div>
           ${s.duration==='Flexible' ? `<div class="row"><b></b><span style="text-align:left;font-weight:400;color:var(--muted);font-size:12.5px">We'll settle the exact duration with you once the meeting is confirmed.</span></div>` : ''}
           <div class="row"><b><svg class="icon" viewBox="0 0 24 24"><path d="M11 3H4a1 1 0 0 0-1 1v7l9 9 8-8-9-9z"/><circle cx="7.5" cy="7.5" r="1"/></svg>Type</b><span>${s.type}</span></div>
+          ${s.recurrence!=='One-time' ? `<div class="row"><b>🔁 Repeats</b><span>${s.recurrence}</span></div>` : ''}
           <div class="row"><b><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>Location</b><span>${s.location}</span></div>
           <div class="row"><b><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>Guest</b><span>${s.name}${s.org?' · '+s.org:''}</span></div>
           <div class="row"><b>Status</b><span class="pill">${s.requestStatus==='Requested' ? 'Pending Host Confirmation' : s.requestStatus}</span></div>
@@ -1273,6 +1282,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     });
     // === END: ARTIMEET MINUTE PRECISION — HOUR SLOT PICK ===
     document.querySelectorAll('[data-duration]').forEach(b=>b.onclick=()=>{haptic('light');s.duration=b.dataset.duration;render()});
+    document.querySelectorAll('[data-recurrence]').forEach(b=>b.onclick=()=>{haptic('light');s.recurrence=b.dataset.recurrence;render()});
 
     // === START: ARTIMEET MINUTE PRECISION — DROPDOWN HANDLER ===
     const minuteSelect=document.getElementById('minuteSelect');
@@ -1632,7 +1642,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     listEl.innerHTML=_adminMeetings.map(m=>`
       <div class="req">
         <div class="reqhead">
-          <div><b>${m.meetingId} · ${m.date} · ${m.time}</b><small>${m.guestName||'—'}${m.guestOrg?' · '+m.guestOrg:''} · ${m.type} · ${m.location}</small></div>
+          <div><b>${m.meetingId} · ${m.date} · ${m.time}</b><small>${m.guestName||'—'}${m.guestOrg?' · '+m.guestOrg:''} · ${m.type} · ${m.location}${(m.recurrence && m.recurrence!=='One-time') ? ' · 🔁 '+m.recurrence : ''}</small></div>
           <div class="pillrow"><span class="pill ${statusClass(m.requestStatus)}">${m.requestStatus}</span></div>
         </div>
         <div class="reqactions">
