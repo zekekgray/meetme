@@ -273,6 +273,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     loadingTimes:false,
     name:'',org:'',email:'',phone:'',notes:'',
     meetingId:'',
+    meetingLink:'', // auto-generated Google Meet link, set when location is Videocall / Virtual Call
     requestStatus:'Requested',
     calendarStatus:'Not synced',
     guestDeviceId:null, // stable per-browser id so a guest's requests can be claimed later on signup
@@ -699,6 +700,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     });
 
     s.meetingId = result.meetingId;
+    s.meetingLink = result.meetingLink || '';
     s.requestStatus = result.requestStatus || 'Requested';
     s.calendarStatus = result.calendarStatus || 'Not synced';
 
@@ -740,7 +742,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     s.duration='30 min'; s.location='Videocall / Virtual Call';
     s.availableTimes=[]; s.loadingTimes=false;
     s.name=''; s.org=''; s.email=''; s.phone=''; s.notes='';
-    s.meetingId=''; s.requestStatus='Requested'; s.calendarStatus='Not synced';
+    s.meetingId=''; s.meetingLink=''; s.requestStatus='Requested'; s.calendarStatus='Not synced';
   }
 
   // ABM-V13 : shown on first open (no active session) instead of dropping straight into the
@@ -1190,8 +1192,12 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
           <div class="row"><b><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>Guest</b><span>${s.name}${s.org?' · '+s.org:''}</span></div>
           <div class="row"><b>Status</b><span class="pill">${s.requestStatus==='Requested' ? 'Pending Host Confirmation' : s.requestStatus}</span></div>
         </div>
+        ${s.location==='Videocall / Virtual Call' ? (
+          s.meetingLink
+            ? `<a class="btn primary full" href="${s.meetingLink}" target="_blank" rel="noopener" style="display:block;text-decoration:none">🎥 Join Google Meet</a>`
+            : `<div class="sub" style="margin-bottom:10px">We'll send the video call link separately once confirmed.</div>`
+        ) : ''}
         <button class="btn primary full" id="addGoogleCalendar">＋ Add to Google Calendar</button>
-        <button class="btn secondary full" id="addCalendar" style="margin-top:8px">Download .ics (Apple / Outlook)</button>
         ${(!s.account && AUTH_ENABLED) ? `
           <div class="sub" style="margin-top:24px;font-weight:750;color:var(--ink)">Want to manage your meetings?</div>
           <div class="sub" style="margin-top:4px">Create an account to view requests, reschedule, cancel, and keep your info for future meetings.</div>
@@ -1589,9 +1595,6 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
       render();
     };
 
-    const ac=document.getElementById('addCalendar');
-    if(ac) ac.onclick=()=>downloadIcs({meetingId:s.meetingId,type:s.type,location:s.location,date:s.date,time:s.time,duration:s.duration});
-
     const agc=document.getElementById('addGoogleCalendar');
     if(agc) agc.onclick=()=>{
       const url=googleCalendarUrl({meetingId:s.meetingId,type:s.type,location:s.location,date:s.date,time:s.time,duration:s.duration});
@@ -1633,6 +1636,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
           <div class="pillrow"><span class="pill ${statusClass(m.requestStatus)}">${m.requestStatus}</span></div>
         </div>
         <div class="reqactions">
+          ${m.meetingLink ? `<a class="btn" href="${m.meetingLink}" target="_blank" rel="noopener" style="text-decoration:none">🎥 Join</a>` : ''}
           <button class="btn primary" data-action="Confirmed" data-id="${m.meetingId}">Confirm</button>
           <button class="btn" data-action="Reviewing" data-id="${m.meetingId}">Mark Reviewing</button>
           <button class="btn" data-action="Reschedule Requested" data-id="${m.meetingId}">Reschedule Requested</button>
