@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,8 +28,9 @@ body{margin:0;background:var(--cream);color:var(--ink);font-family:-apple-system
  button,input,textarea{font:inherit}
 button{cursor:pointer;-webkit-appearance:none;appearance:none}
 /* === START: ARTIMEET LANDING CENTER === */
-.app{max-width:980px;margin:auto;padding:24px}
-.app:has(.landing-center){min-height:calc(100vh - 48px);display:flex;flex-direction:column;justify-content:center}
+/* === START: ARTIMEET GLOBAL SCREEN CENTER === */
+.app{max-width:980px;margin:auto;padding:24px;min-height:calc(100vh - 48px);display:flex;flex-direction:column;justify-content:center}
+/* === END: ARTIMEET GLOBAL SCREEN CENTER === */
 /* === END: ARTIMEET LANDING CENTER === */
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .brand{font-weight:800;font-size:19px;letter-spacing:-.01em}
@@ -51,17 +51,16 @@ h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px;font-weight:800;color:#
 .choice.active{border-color:var(--ink);background:var(--ink);color:#fff}
 .dot{width:17px;height:17px;border:2px solid #cfc8ba;border-radius:50%;flex:none}
 .choice.active .dot{display:none}
-.btn{border-radius:999px;padding:16px 22px;font-weight:750;font-size:14px;border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:var(--ink);text-align:center;box-shadow:0 8px 22px rgba(0,0,0,.08),inset 0 1px 0 rgba(255,255,255,.6)}
+.btn{border-radius:999px;padding:16px 22px;font-weight:750;font-size:14px;border:1px solid rgba(0,0,0,.07);background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:var(--ink);text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.11),inset 0 1px 0 rgba(255,255,255,.7)}
 .btn:disabled{opacity:.45;-webkit-text-fill-color:currentColor;cursor:default}
-/* ABM-FIX-83738001 : .primary previously used a translucent near-white glass fill on top of the
-   equally-white .panel/.card background — the button rendered essentially invisible (no visible
-   fill, only a faint shadow), so "Verify via Email" / "Send code" / "Continue" etc. looked like they
-   had disappeared. Primary CTAs are now solid dark fill w/ white text so they're always legible
-   regardless of what they sit on top of. */
-.primary{background:var(--ink);color:#fff;border:1px solid var(--ink);box-shadow:0 10px 26px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:none;-webkit-backdrop-filter:none}
+/* ABM-FIX-83738003 : back to the white/frosted-glass "pill" aesthetic (matching iMessage-style
+   floating buttons) instead of solid dark fill. Definition now comes from a visible border +
+   stronger drop shadow rather than fill color, so the pill still reads clearly even sitting on
+   a plain white panel — same trick iOS uses for glass buttons floating over flat backgrounds. */
+.primary{background:rgba(255,255,255,.78);color:var(--ink);border:1px solid rgba(0,0,0,.08);box-shadow:0 10px 24px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .btn.secondary{background:rgba(242,242,247,.7);border:none;color:var(--ink);box-shadow:none;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .btn.ghost{background:transparent;border:none;color:var(--muted);box-shadow:none}
-.backpill{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.6);color:var(--ink);flex:none}
+.backpill{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:50%;border:1px solid rgba(0,0,0,.07);background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.6);color:var(--ink);flex:none}
 .backpill svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .avatarRow{display:flex;align-items:center;gap:14px;margin-top:7px}
 .avatarPreview{width:64px;height:64px;border-radius:50%;overflow:hidden;background:#f2f2f7;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:var(--muted);flex:none;border:1px solid var(--line)}
@@ -84,7 +83,7 @@ h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px;font-weight:800;color:#
 .day.selected{background:var(--ink);color:#fff;border-radius:50%}
 .times{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px;animation:fadeSlideIn var(--dur-standard) var(--ease-linear)}
 @keyframes fadeSlideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-.times .btn{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.6);color:var(--ink);border-radius:999px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.6)}
+.times .btn{background:rgba(255,255,255,.55);border:1px solid rgba(0,0,0,.07);color:var(--ink);border-radius:999px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.6)}
 .time.active{background:var(--ink);color:#fff;border-color:var(--ink)}
 /* ABM-V10-83737-pulse : "Preferred time" label pulses a gold dot while a date is picked but no time yet */
 .timelabel{transition:color var(--dur-standard) ease}
@@ -92,7 +91,7 @@ h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px;font-weight:800;color:#
 .timelabel.pulse::after{content:'';display:inline-block;width:6px;height:6px;background:var(--gold);border-radius:50%;margin-left:8px;vertical-align:middle;animation:dotPulse 1.2s ease-in-out infinite}
 @keyframes dotPulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
 .duration{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
-.duration .btn{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.6);color:var(--ink);border-radius:999px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.6)}
+.duration .btn{background:rgba(255,255,255,.55);border:1px solid rgba(0,0,0,.07);color:var(--ink);border-radius:999px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.6)}
 .duration .active{background:var(--ink);color:#fff;border-color:var(--ink);box-shadow:0 8px 18px rgba(0,0,0,.18)}
 .duration-pills{flex-wrap:nowrap;gap:6px}
 .duration-pills .btn{flex:1 1 0;min-width:0;padding:10px 2px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -153,27 +152,29 @@ input:focus,textarea:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(28,
 textarea{min-height:90px;resize:vertical}
 .actions{display:flex;gap:10px;margin-top:18px}
 .actions .primary{flex:1}
-.actions .btn:not(.primary){border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.55);color:var(--ink);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.6)}
+.actions .btn:not(.primary){border:1px solid rgba(0,0,0,.07);background:rgba(255,255,255,.55);color:var(--ink);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.6)}
 .confirm{text-align:center;max-width:620px;margin:auto}
 
 /* ABM-V11-83737210 : checkmark scales in first, THEN summary rows fade upward one after another —
    this only fires on the confirmation panel's own entrance (panel.transition-in), not on every re-render */
-.check{width:72px;height:72px;background:#34c759;color:#fff;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px;
-  opacity:0;transform:scale(.4)}
+/* ABM-FIX-83738002 : moved the "hidden" starting point INTO the keyframes (from{}) instead of a
+   base opacity:0 rule. Previously, elements were invisible-by-default and only revealed once
+   .panel.transition-in played the entrance animation — if a re-render ever happened without that
+   class (e.g. a loading-state toggle on an already-open screen), the element was stuck invisible
+   forever. Now default state is always visible; animation is purely a cosmetic enhancement. */
+.check{width:72px;height:72px;background:#34c759;color:#fff;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px}
 .panel.transition-in .check{animation:checkPop var(--dur-emphasis) var(--ease-spring) .08s forwards}
-@keyframes checkPop{to{opacity:1;transform:scale(1)}}
+@keyframes checkPop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
 .check svg{width:32px;height:32px;stroke:#fff;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round;
-  stroke-dasharray:24;stroke-dashoffset:24}
+  stroke-dasharray:24}
 .panel.transition-in .check svg{animation:checkDraw var(--dur-standard) ease-out .22s forwards}
-@keyframes checkDraw{to{stroke-dashoffset:0}}
+@keyframes checkDraw{from{stroke-dashoffset:24}to{stroke-dashoffset:0}}
 
-.confirm h2,.confirm>p.sub{opacity:0;transform:translateY(6px)}
 .panel.transition-in .confirm h2{animation:detailFadeUp var(--dur-standard) ease-out .3s forwards}
 .panel.transition-in .confirm>p.sub{animation:detailFadeUp var(--dur-standard) ease-out .36s forwards}
-@keyframes detailFadeUp{to{opacity:1;transform:translateY(0)}}
+@keyframes detailFadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 .summary{border:1px solid var(--line);border-radius:16px;padding:0 18px;text-align:left;background:#fff;margin:22px 0}
-.summary .row{opacity:0;transform:translateY(8px)}
 .panel.transition-in .summary .row{animation:detailFadeUp var(--dur-standard) ease-out forwards}
 .panel.transition-in .summary .row:nth-child(1){animation-delay:.42s}
 .panel.transition-in .summary .row:nth-child(2){animation-delay:.47s}
@@ -188,7 +189,6 @@ textarea{min-height:90px;resize:vertical}
 .row span{font-size:14px;font-weight:700;color:#1c1c1e;margin-left:auto;text-align:right}
 .row span.pill{background:#fff1c9;color:#9a711e;font-weight:750;font-size:11px;padding:5px 9px;border-radius:999px}
 
-.confirm .btn.primary.full{opacity:0;transform:translateY(8px)}
 .panel.transition-in .confirm .btn.primary.full{animation:detailFadeUp var(--dur-standard) ease-out .77s forwards}
 
 .admin{display:none}.admin.show{display:block}
