@@ -252,6 +252,7 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     meetingId:'',
     requestStatus:'Requested',
     calendarStatus:'Not synced',
+    guestDeviceId:null, // stable per-browser id so a guest's requests can be claimed later on signup
     account:null, // null = guest. Once "created": { name, email, org, phone, timezone }
     meetings:[],  // this user's own requests only — never other people's
     view:'landing', // 'landing' | 'flow' | 'home' | 'account' | 'myMeetings' (Activity) | 'meetingDetail' | 'myProfile' | 'notifications' | 'settings' | 'privacyData' | 'signInEmail' | 'otp'
@@ -443,6 +444,21 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
     }catch(e){ /* corrupted or unavailable — start clean */ }
   }
 
+  // ABM-GUEST : stable per-browser id for guest requests — no account/password needed.
+  // This is what lets us later attach a guest's past requests to an account if they sign up.
+  function getGuestDeviceId(){
+    try{
+      let id=localStorage.getItem('artimeet_guest_id');
+      if(!id){
+        id=(crypto.randomUUID ? crypto.randomUUID() : 'gd-'+Date.now()+'-'+Math.random().toString(16).slice(2));
+        localStorage.setItem('artimeet_guest_id', id);
+      }
+      return id;
+    }catch(e){
+      return 'gd-'+Date.now()+'-'+Math.random().toString(16).slice(2);
+    }
+  }
+
   // ABM-AUTH : source of truth for "am I signed in" — asks Supabase directly rather than
   // trusting the locally-cached account object, so a session that expired/was revoked
   // elsewhere doesn't leave the UI showing a stale signed-in state.
@@ -569,27 +585,17 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
       profile = upserted;
     }
     s.account = accountFromProfile(user, profile);
-    if(s.otpMode==='signup'){
-      // ABM-V13 : if they already went through the guest booking flow (Type → Date/Time →
-      // Details) before creating an account, that request was only sitting in local memory —
-      // migrate it into the new, RLS-protected `meetings` row now instead of discarding it.
-      if(user && s.meetingId && s.date && s.time){
-        try{
-          const { error: meetingError } = await sb.from('meetings').insert({
-            user_id: user.id,
-            meeting_ref: s.meetingId,
-            type: s.type,
-            meeting_date: s.date,
-            meeting_time: s.time,
-            duration: s.duration,
-            location: s.location,
-            notes: s.notes,
-            status: s.requestStatus || 'Requested',
-            calendar_status: s.calendarStatus || 'Not synced'
-          });
-          if(meetingError) console.error('Could not migrate guest meeting to account:', meetingError.message);
-        }catch(e){ console.error('Could not migrate guest meeting to account:', e.message); }
-      }
+    if(s.otpMode==='signup' && user && s.guestDeviceId){
+      // ABM-GUEST : the guest's past requests already live in `meetings` (saved at request
+      // time) tagged with guest_device_id instead of a user_id. Claim them for this new
+      // account by attaching user_id — no re-insert, nothing duplicated.
+      try{
+        const { error: claimError } = await sb.from('meetings')
+          .update({ user_id: user.id })
+          .eq('guest_device_id', s.guestDeviceId)
+          .is('user_id', null);
+        if(claimError) console.error('Could not claim guest meetings for account:', claimError.message);
+      }catch(e){ console.error('Could not claim guest meetings for account:', e.message); }
     }
     await loadMyMeetings(); // pulls this user's own meetings (RLS-scoped), migrated one included
     saveSession();
@@ -660,34 +666,51 @@ select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px
   async function saveMeetingRequest(name,org,email,phone,notes){
     s.name=name; s.org=org; s.email=email; s.phone=phone; s.notes=notes;
     s.meetingId='ABM-'+now.getFullYear()+'-'+Math.floor(1000+Math.random()*9000);
-    if(s.account && s.account.id){
-      // Signed-in guest becomes an owned, RLS-protected row — only this user's session can ever read it back.
-      const { error } = await sb.from('meetings').insert({
-        user_id: s.account.id,
-        meeting_ref: s.meetingId,
-        type: s.type,
-        meeting_date: s.date,
-        meeting_time: s.time,
-        duration: s.duration,
-        location: s.location,
-        notes: notes,
-        status: 'Requested',
-        calendar_status: 'Not synced'
-      });
-      if(error) throw new Error(error.message);
-      await loadMyMeetings();
-    } else {
-      // No account yet — nothing to attach a user_id to, so this stays local-only
-      // (matches the existing "continue without an account" guest flow).
+
+    // ABM-GUEST : every request — guest or signed-in — saves to Supabase immediately, so
+    // ArtiByte sees it in the internal dashboard right away. Guests get a guest_device_id
+    // instead of a user_id (no account/password required).
+    const isGuest = !(s.account && s.account.id);
+    if(isGuest && !s.guestDeviceId) s.guestDeviceId = getGuestDeviceId();
+
+    const row = {
+      user_id: isGuest ? null : s.account.id,
+      guest_device_id: isGuest ? s.guestDeviceId : null,
+      meeting_ref: s.meetingId,
+      type: s.type,
+      meeting_date: s.date,
+      meeting_time: s.time,
+      duration: s.duration,
+      location: s.location,
+      notes: notes,
+      guest_name: isGuest ? name : null,
+      guest_org: isGuest ? org : null,
+      guest_email: isGuest ? email : null,
+      guest_phone: isGuest ? phone : null,
+      status: 'Requested',
+      calendar_status: 'Not synced',
+      owner: 'ARTIBYTE',
+      source: 'PUBLIC_WEBSITE',
+      assigned_to: null
+    };
+
+    const { data, error } = await sb.from('meetings').insert(row).select().single();
+    if(error) throw new Error(error.message);
+
+    if(isGuest){
+      // No RLS-scoped session to re-query as a guest — keep the confirmed row locally too.
       s.meetings.push({
         meetingId:s.meetingId,
         date:s.date,
         time:s.time,
         type:s.type,
         location:s.location,
-        requestStatus:'Requested'
+        requestStatus:data.status||'Requested'
       });
+    } else {
+      await loadMyMeetings();
     }
+
     saveSession();
     notifyBackend('requested', {
       meetingId:s.meetingId, type:s.type, date:s.date, time:s.time,
