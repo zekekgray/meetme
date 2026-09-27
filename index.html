@@ -49,7 +49,12 @@ h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px;font-weight:800;color:#
 .choice.active .dot{display:none}
 .btn{border-radius:999px;padding:16px 22px;font-weight:750;font-size:14px;border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:var(--ink);text-align:center;box-shadow:0 8px 22px rgba(0,0,0,.08),inset 0 1px 0 rgba(255,255,255,.6)}
 .btn:disabled{opacity:.45;-webkit-text-fill-color:currentColor;cursor:default}
-.primary{background:rgba(255,255,255,.75);color:var(--ink);border-color:rgba(255,255,255,.85);box-shadow:0 10px 26px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.85);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+/* ABM-FIX-83738001 : .primary previously used a translucent near-white glass fill on top of the
+   equally-white .panel/.card background — the button rendered essentially invisible (no visible
+   fill, only a faint shadow), so "Verify via Email" / "Send code" / "Continue" etc. looked like they
+   had disappeared. Primary CTAs are now solid dark fill w/ white text so they're always legible
+   regardless of what they sit on top of. */
+.primary{background:var(--ink);color:#fff;border:1px solid var(--ink);box-shadow:0 10px 26px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:none;-webkit-backdrop-filter:none}
 .btn.secondary{background:rgba(242,242,247,.7);border:none;color:var(--ink);box-shadow:none;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .btn.ghost{background:transparent;border:none;color:var(--muted);box-shadow:none}
 .backpill{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.6);color:var(--ink);flex:none}
@@ -121,7 +126,7 @@ h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px;font-weight:800;color:#
 .duration .active:active{filter:brightness(1.25)}
 .day:not(:disabled):active{background:#ececec}
 .day.selected:active{filter:brightness(.82)}
-.btn.primary:active{filter:brightness(.85)}
+.btn.primary:active{filter:brightness(1.25)}
 
 /* ABM-V11-83737208 : Request Meeting button loading/success sequence — in-place feedback, not a full-screen swap */
 .btn.is-loading,.btn.is-success{pointer-events:none}
