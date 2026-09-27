@@ -25,8 +25,8 @@
 --ease-spring:cubic-bezier(.34,1.56,.64,1);--dur-spring:.2s}
 *{box-sizing:border-box}
 body{margin:0;background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",ui-sans-serif,system-ui,"Segoe UI",sans-serif}
-button,input,textarea{font:inherit}
-button{cursor:pointer}
+ button,input,textarea{font:inherit}
+button{cursor:pointer;-webkit-appearance:none;appearance:none}
 .app{max-width:980px;margin:auto;padding:24px}
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .brand{font-weight:800;font-size:19px;letter-spacing:-.01em}
@@ -36,6 +36,8 @@ button{cursor:pointer}
 .panel.transition-in{animation:panelIn var(--dur-standard) var(--ease-linear)}
 @keyframes panelIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .hero{max-width:600px;margin:0 auto;text-align:left}
+.hero.landing-center{text-align:center}
+.hero.landing-center .choices,.hero.landing-center .btn.full{margin-left:auto;margin-right:auto}
 .eyebrow{color:var(--gold);font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
 h1{font-size:clamp(28px,4vw,40px);line-height:1.05;letter-spacing:-.04em;margin:6px 0 10px;font-weight:800;color:#1c1c1e}
 h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px;font-weight:800;color:#000}
@@ -45,10 +47,20 @@ h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px;font-weight:800;color:#
 .choice.active{border-color:var(--ink);background:var(--ink);color:#fff}
 .dot{width:17px;height:17px;border:2px solid #cfc8ba;border-radius:50%;flex:none}
 .choice.active .dot{display:none}
-.btn{border-radius:12px;padding:16px 20px;font-weight:750;font-size:14px;border:1px solid var(--line);background:#fff;color:var(--ink);text-align:center}
-.primary{background:#000;color:#fff;border-color:#000;box-shadow:0 7px 16px rgba(0,0,0,.15)}
-.btn.secondary{background:#f2f2f7;border:none;color:var(--ink);box-shadow:none}
+.btn{border-radius:999px;padding:16px 22px;font-weight:750;font-size:14px;border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:var(--ink);text-align:center;box-shadow:0 8px 22px rgba(0,0,0,.08),inset 0 1px 0 rgba(255,255,255,.6)}
+.btn:disabled{opacity:.45;-webkit-text-fill-color:currentColor;cursor:default}
+.primary{background:rgba(255,255,255,.75);color:var(--ink);border-color:rgba(255,255,255,.85);box-shadow:0 10px 26px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.85);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.btn.secondary{background:rgba(242,242,247,.7);border:none;color:var(--ink);box-shadow:none;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .btn.ghost{background:transparent;border:none;color:var(--muted);box-shadow:none}
+.backpill{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.6);color:var(--ink);flex:none}
+.backpill svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.avatarRow{display:flex;align-items:center;gap:14px;margin-top:7px}
+.avatarPreview{width:64px;height:64px;border-radius:50%;overflow:hidden;background:#f2f2f7;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:var(--muted);flex:none;border:1px solid var(--line)}
+.avatarPreview img{width:100%;height:100%;object-fit:cover}
+.splash{position:fixed;inset:0;background:var(--cream);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s ease}
+.splash.hide{opacity:0;pointer-events:none}
+.splash-logo{font-weight:800;font-size:28px;letter-spacing:-.02em;color:var(--ink);opacity:0;animation:splashFade .5s ease forwards}
+@keyframes splashFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 .full{width:100%;margin-top:18px}
 .steps{display:flex;gap:7px;margin-bottom:20px}.stepdot{height:3px;flex:1;border-radius:999px;background:#e5e5ea}.stepdot.on{background:var(--ink)}
 .calendar{border:1px solid var(--line);border-radius:17px;padding:17px;background:#fff}
@@ -63,26 +75,38 @@ h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px;font-weight:800;color:#
 .day.selected{background:var(--ink);color:#fff;border-radius:50%}
 .times{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px;animation:fadeSlideIn var(--dur-standard) var(--ease-linear)}
 @keyframes fadeSlideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-.times .btn{background:#f2f2f7;border:none;color:var(--ink);border-radius:12px}
+.times .btn{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.6);color:var(--ink);border-radius:999px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.6)}
 .time.active{background:var(--ink);color:#fff;border-color:var(--ink)}
 /* ABM-V10-83737-pulse : "Preferred time" label pulses a gold dot while a date is picked but no time yet */
 .timelabel{transition:color var(--dur-standard) ease}
 .timelabel.pulse{position:relative}
 .timelabel.pulse::after{content:'';display:inline-block;width:6px;height:6px;background:var(--gold);border-radius:50%;margin-left:8px;vertical-align:middle;animation:dotPulse 1.2s ease-in-out infinite}
 @keyframes dotPulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
-.duration{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.duration .btn{background:#f2f2f7;border:none;color:var(--ink);border-radius:12px}.duration .active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.duration{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.duration .btn{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.6);color:var(--ink);border-radius:999px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.6)}
+.duration .active{background:var(--ink);color:#fff;border-color:var(--ink);box-shadow:0 8px 18px rgba(0,0,0,.18)}
+.duration-pills{flex-wrap:nowrap;gap:6px}
+.duration-pills .btn{flex:1 1 0;min-width:0;padding:10px 2px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconpills{display:flex;gap:12px;margin-top:6px}
+.iconpill{position:relative;width:48px;height:48px;padding:0;border-radius:50%;border:1.5px solid #1c1c1e;background:#fff;color:#1c1c1e;display:flex;align-items:center;justify-content:center}
+.iconpill.active{background:#1c1c1e;color:#fff}
+.iconpill::after{content:attr(data-tooltip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);background:#1c1c1e;color:#fff;font-size:11px;font-weight:600;white-space:nowrap;padding:6px 10px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity var(--dur-standard) ease,transform var(--dur-standard) ease}
+.iconpill::before{content:'';position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1c1c1e;opacity:0;pointer-events:none;transition:opacity var(--dur-standard) ease}
+.iconpill:hover::after,.iconpill:hover::before{opacity:1;transform:translateX(-50%) translateY(0)}
+.maplinks{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.maplinks .btn{flex:1;min-width:140px;background:#f2f2f7;border:none;color:var(--ink);font-size:13px;padding:12px 14px}
 
 /* ABM-V11-83737205 : unified press system. PRESSED (:active pseudo, transient — while finger/cursor is down)
    is intentionally separate from SELECTED (.active class, persistent — set by JS after a choice is made).
    Resting state springs back with overshoot; press-down itself is instant/linear, no bounce going IN. */
-.btn,.choice,.day:not(:disabled){
+.btn,.choice,.day:not(:disabled),.iconpill,.backpill{
   transform:scale(1);
   transition:transform var(--dur-spring) var(--ease-spring),
              background-color var(--dur-micro) linear,
              filter var(--dur-micro) linear,
              box-shadow var(--dur-micro) linear;
 }
-.btn:active,.choice:active,.day:not(:disabled):active{
+.btn:active,.choice:active,.day:not(:disabled):active,.iconpill:active,.backpill:active{
   transform:scale(.985);
   transition:transform var(--dur-micro) linear,
              background-color var(--dur-micro) linear,
@@ -120,7 +144,7 @@ input:focus,textarea:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(28,
 textarea{min-height:90px;resize:vertical}
 .actions{display:flex;gap:10px;margin-top:18px}
 .actions .primary{flex:1}
-.actions .btn:not(.primary){border:none;background:#f2f2f7;color:var(--ink)}
+.actions .btn:not(.primary){border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.55);color:var(--ink);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.6)}
 .confirm{text-align:center;max-width:620px;margin:auto}
 
 /* ABM-V11-83737210 : checkmark scales in first, THEN summary rows fade upward one after another —
@@ -172,11 +196,8 @@ textarea{min-height:90px;resize:vertical}
 </style>
 </head>
 <body>
+<div id="splash" class="splash"><div class="splash-logo">Artimeet</div></div>
 <div class="app">
-  <header class="top">
-    <div class="brand">Artimeet</div>
-  </header>
-
   <main id="public"></main>
   <section id="admin" class="admin"></section>
 </div>
@@ -197,7 +218,7 @@ textarea{min-height:90px;resize:vertical}
   const now=new Date();
   let s={
     step:0,
-    type:'Business / Partnership',
+    type:null,
     viewMonth:now.getMonth(),
     viewYear:now.getFullYear(),
     day:null,
@@ -205,6 +226,7 @@ textarea{min-height:90px;resize:vertical}
     time:null,
     duration:'30 min',
     location:'Videocall / Virtual Call',
+    locationAddress:'',
     timezone:Intl.DateTimeFormat().resolvedOptions().timeZone,
     availableTimes:[],
     loadingTimes:false,
@@ -233,8 +255,28 @@ textarea{min-height:90px;resize:vertical}
     authReturnStep:0
   };
 
+  // ABM-V15 : guards for the choices scroll-auto-highlight — _scrollFocusObserver holds the
+  // current observer so we can disconnect the old one instead of stacking a new one every
+  // render; _tapLockUntil briefly blocks the observer right after an explicit tap so it can't
+  // immediately override a manual selection with whatever happens to sit in the center band.
+  let _scrollFocusObserver=null;
+  let _tapLockUntil=0;
+
+  // ABM-V15-fix : this was being called from bind() but was never defined anywhere in the file,
+  // which threw a ReferenceError on every single render and broke the whole app. The choices
+  // list isn't a scroll-snap carousel yet, so this stays a safe no-op scaffold — it just disconnects
+  // any previous observer (guards above are kept for whenever real scroll-snap support is added).
+  function bindChoiceScrollFocus(){
+    if(_scrollFocusObserver){ _scrollFocusObserver.disconnect(); _scrollFocusObserver=null; }
+  }
+
   const types=['Business / Partnership','Product Demo','Client Meeting','Technical Discussion','Career / Hiring','Other'];
   const locations=['Videocall / Virtual Call','Phone Call','In Person'];
+  const locationIcons={
+    'Videocall / Virtual Call':'<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6.5" width="13" height="11" rx="2.5"/><path d="M15.5 10.5l6-3.5v10l-6-3.5z"/></svg>',
+    'Phone Call':'<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5c0-.6.4-1 1-1h3l2 5-2 1.3a11 11 0 0 0 5.2 5.2L14.5 13l5 2v3c0 .6-.4 1-1 1C10.5 19 4 12.5 4 4.5z"/></svg>',
+    'In Person':'<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>'
+  };
   const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
 
   function daysInMonth(y,m){return new Date(y,m+1,0).getDate();}
@@ -259,11 +301,17 @@ textarea{min-height:90px;resize:vertical}
   // ABM-V9-83737001 : friendly "City (GMT±X)" display instead of raw IANA string (e.g. Asia/Manila -> Manila (GMT+8))
   function formatTimezone(tz){
     const city=(tz||'').split('/').pop().replace(/_/g,' ');
-    const offsetMin=-new Date().getTimezoneOffset();
-    const sign=offsetMin>=0?'+':'-';
-    const abs=Math.abs(offsetMin);
-    const hh=Math.floor(abs/60), mm=abs%60;
-    const offsetStr=mm===0?`GMT${sign}${hh}`:`GMT${sign}${hh}:${String(mm).padStart(2,'0')}`;
+    let offsetStr;
+    try{
+      const parts=new Intl.DateTimeFormat('en-US',{timeZone:tz,timeZoneName:'shortOffset'}).formatToParts(new Date());
+      offsetStr=(parts.find(p=>p.type==='timeZoneName')||{}).value||'';
+    }catch(e){
+      const offsetMin=-new Date().getTimezoneOffset();
+      const sign=offsetMin>=0?'+':'-';
+      const abs=Math.abs(offsetMin);
+      const hh=Math.floor(abs/60), mm=abs%60;
+      offsetStr=mm===0?`GMT${sign}${hh}`:`GMT${sign}${hh}:${String(mm).padStart(2,'0')}`;
+    }
     return `${city} (${offsetStr})`;
   }
 
@@ -287,6 +335,35 @@ textarea{min-height:90px;resize:vertical}
   }
 
   // ABM-V5-83736609 : TODO(backend) — swap for real Google/Outlook OAuth "add to calendar" instead of raw .ics download
+  function pad2(n){ return String(n).padStart(2,'0'); }
+
+  function toGCalUTC(dateStr,timeStr){
+    const d=new Date(`${dateStr} ${timeStr}`);
+    if(isNaN(d.getTime())) return null;
+    return `${d.getUTCFullYear()}${pad2(d.getUTCMonth()+1)}${pad2(d.getUTCDate())}T${pad2(d.getUTCHours())}${pad2(d.getUTCMinutes())}00Z`;
+  }
+
+  function durationMinutes(duration){
+    const n=parseInt(duration,10);
+    return isNaN(n) ? 30 : n;
+  }
+
+  function googleCalendarUrl(m){
+    const startStr=toGCalUTC(m.date,m.time);
+    if(!startStr) return null;
+    const start=new Date(`${m.date} ${m.time}`);
+    const end=new Date(start.getTime()+durationMinutes(m.duration||'30 min')*60000);
+    const endStr=`${end.getUTCFullYear()}${pad2(end.getUTCMonth()+1)}${pad2(end.getUTCDate())}T${pad2(end.getUTCHours())}${pad2(end.getUTCMinutes())}00Z`;
+    const params=new URLSearchParams({
+      action:'TEMPLATE',
+      text:`Artimeet — ${m.type||'Meeting'}`,
+      dates:`${startStr}/${endStr}`,
+      details:`Meeting ID ${m.meetingId}`,
+      location:m.location||''
+    });
+    return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  }
+
   function downloadIcs(m){
     const ics=`BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Artimeet — ${m.type}\nDESCRIPTION:Meeting ID ${m.meetingId}\nLOCATION:${m.location}\nEND:VEVENT\nEND:VCALENDAR`;
     const blob=new Blob([ics],{type:'text/calendar'});
@@ -375,7 +452,8 @@ textarea{min-height:90px;resize:vertical}
       email: user ? user.email : '',
       org: (profile && profile.organization) || '',
       phone: (profile && profile.phone) || '',
-      timezone: (profile && profile.timezone) || s.timezone
+      timezone: (profile && profile.timezone) || s.timezone,
+      avatarUrl: (profile && profile.avatar_url) || ''
     };
   }
 
@@ -600,7 +678,7 @@ textarea{min-height:90px;resize:vertical}
 
   // ABM-V10-83737103 : single source of truth for clearing per-request transient state before starting a new request
   function resetRequestFlow(){
-    s.type='Business / Partnership';
+    s.type=null;
     s.day=null; s.date=null; s.time=null;
     s.duration='30 min'; s.location='Videocall / Virtual Call';
     s.availableTimes=[]; s.loadingTimes=false;
@@ -613,7 +691,7 @@ textarea{min-height:90px;resize:vertical}
   // visitor continue as a guest if they just want to send a one-off request.
   function renderLanding(){
     publicView.innerHTML=`
-    <div class="panel hero">
+    <div class="panel hero landing-center">
       <h1>Welcome to Artimeet.</h1>
       <p>Sign in to manage your meetings, create an account to save this request for later, or continue as a guest.</p>
       <button class="btn primary full" id="landingSignIn">Sign in</button>
@@ -625,7 +703,13 @@ textarea{min-height:90px;resize:vertical}
   function renderHome(){
     publicView.innerHTML=`
     <div class="panel">
-     <h2>Welcome back${s.account&&s.account.name?', '+s.account.name:''}</h2>      <div class="sub">${s.account?s.account.email:''}</div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div class="avatarPreview" style="width:52px;height:52px;font-size:18px">${s.account&&s.account.avatarUrl?`<img src="${s.account.avatarUrl}">`:`<span>${(s.account&&s.account.name?s.account.name[0]:'?').toUpperCase()}</span>`}</div>
+        <div>
+          <h2 style="margin:0">Welcome back${s.account&&s.account.name?', '+s.account.name:''}</h2>
+          <div class="sub">${s.account?s.account.email:''}</div>
+        </div>
+      </div>
       <div class="choices" style="margin-top:20px">
         <button class="choice" id="goNewRequest"><span class="dot"></span><span>New meeting request</span></button>
         <button class="choice" id="goMyMeetings"><span class="dot"></span><span>My meetings (${s.meetings.length})</span></button>
@@ -638,9 +722,9 @@ textarea{min-height:90px;resize:vertical}
   function renderMyMeetings(){
     publicView.innerHTML=`
     <div class="panel">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-        <div><h2>My Meetings</h2></div>
-        <button class="btn" id="backHome">← Back</button>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <button class="backpill" id="backHome" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div><h2 style="margin:0">My Meetings</h2></div>
       </div>
       ${s.meetings.length===0 ? `
         <div style="text-align:center;padding:36px 12px">
@@ -653,7 +737,7 @@ textarea{min-height:90px;resize:vertical}
             <div><b>${m.meetingId} · ${m.date} · ${m.time}</b><small>${m.type} · ${m.location}</small></div>
             <div class="pillrow"><span class="pill ${m.requestStatus==='Confirmed'?'green':m.requestStatus==='Reviewing'?'blue':m.requestStatus==='Cancelled'?'gray':''}">${m.requestStatus}</span></div>
           </div>
-          <div class="reqactions"><button class="btn" data-ics="${m.meetingId}">＋ Add to Calendar</button></div>
+          <div class="reqactions"><button class="btn" data-gcal="${m.meetingId}">＋ Google Calendar</button><button class="btn" data-ics="${m.meetingId}">Download .ics</button></div>
         </div>
       `).join('')}
       <button class="btn primary full" id="goNewRequest2" style="margin-top:16px">+ New request</button>
@@ -669,6 +753,12 @@ textarea{min-height:90px;resize:vertical}
           <button class="btn" id="cancelEditProfile">✕ Cancel</button>
         </div>
         <div class="sub">Email can't be changed here — it's your sign-in ID.</div>
+        <label>Profile photo</label>
+        <div class="avatarRow">
+          <div class="avatarPreview" id="avatarPreview">${s.account&&s.account.avatarUrl?`<img src="${s.account.avatarUrl}">`:`<span>${(s.account&&s.account.name?s.account.name[0]:'?').toUpperCase()}</span>`}</div>
+          <input type="file" id="pfAvatarFile" accept="image/*" style="display:none">
+          <button class="btn" type="button" id="pfAvatarBtn">Change photo</button>
+        </div>
         <form id="profileForm">
           <label>Name</label><input id="pfName" value="${s.account&&s.account.name?s.account.name:''}" placeholder="Juan Dela Cruz">
           <label>Org</label><input id="pfOrg" value="${s.account&&s.account.org?s.account.org:''}" placeholder="ABC Company">
@@ -681,10 +771,11 @@ textarea{min-height:90px;resize:vertical}
     }
     publicView.innerHTML=`
     <div class="panel confirm" style="max-width:420px">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="backpill" id="backHome2" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
         <h2 style="margin:0">My Profile</h2>
-        <button class="btn" id="backHome2">← Back</button>
       </div>
+      <div class="avatarPreview" style="width:88px;height:88px;font-size:30px;margin:20px auto 4px">${s.account&&s.account.avatarUrl?`<img src="${s.account.avatarUrl}">`:`<span>${(s.account&&s.account.name?s.account.name[0]:'?').toUpperCase()}</span>`}</div>
       <div class="summary" style="text-align:left">
         <div class="row"><b>Email</b><span>${s.account?s.account.email:''}</span></div>
         <div class="row"><b>Name</b><span>${s.account&&s.account.name?s.account.name:'—'}</span></div>
@@ -707,7 +798,7 @@ textarea{min-height:90px;resize:vertical}
         ${s.otpError ? `<div class="sub" style="color:#c0392b;margin-top:8px">${s.otpError}</div>` : ''}
         <button class="btn primary full" type="submit" ${s.authLoading?'disabled':''}>${s.authLoading?'Sending…':'Send code'}</button>
       </form>
-      <button class="btn ghost full" id="backFromSignIn">← Back</button>
+      <button class="backpill" id="backFromSignIn" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
     </div>`;
   }
 
@@ -752,7 +843,7 @@ textarea{min-height:90px;resize:vertical}
         <div class="choices">
           ${types.map(t=>`<button class="choice ${s.type===t?'active':''}" data-type="${t}"><span class="dot"></span><span>${t}</span></button>`).join('')}
         </div>
-        <button class="btn primary full" id="next">Continue →</button>
+        <button class="btn primary full" id="next" ${!s.type?'disabled':''}>Continue</button>
       </div>`;
     }
 
@@ -781,12 +872,22 @@ textarea{min-height:90px;resize:vertical}
           s.availableTimes.map(t=>`<button class="btn time ${s.time===t?'active':''}" data-time="${t}">${t}</button>`).join('')
         }</div>
         <div style="margin-top:20px;font-weight:750">Duration</div>
-        <div class="duration">${['30 min','45 min','60 min','Flexible'].map(d=>`<button class="btn ${s.duration===d?'active':''}" data-duration="${d}">${d}</button>`).join('')}</div>
+        <div class="duration duration-pills">${['30 min','45 min','60 min','Flexible'].map(d=>`<button class="btn ${s.duration===d?'active':''}" data-duration="${d}">${d}</button>`).join('')}</div>
         ${s.duration==='Flexible' ? `<div class="sub" style="margin-top:8px">We'll settle the exact duration with you once confirmed.</div>` : ''}
         <div style="margin-top:20px;font-weight:750">Meeting location</div>
-        <div class="duration">${locations.map(l=>`<button class="btn ${s.location===l?'active':''}" data-location="${l}">${l}</button>`).join('')}</div>
+        <div class="iconpills">${locations.map(l=>`<button class="iconpill ${s.location===l?'active':''}" data-location="${l}" data-tooltip="${l}" aria-label="${l}">${locationIcons[l]}</button>`).join('')}</div>
+        <div class="sub" style="margin-top:8px">${s.location}</div>
+        ${s.location==='In Person' ? `
+        <div style="margin-top:12px">
+          <label style="margin-top:0">Where should we meet?</label>
+          <input id="locationAddress" value="${s.locationAddress}" placeholder="e.g. Greenbelt 3, Makati City">
+          <div class="maplinks">
+            <button class="btn" type="button" id="openGoogleMaps"><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>Google Maps</button>
+            <button class="btn" type="button" id="openWaze">Waze</button>
+          </div>
+        </div>` : ''}
         <div class="sub" style="margin-top:12px">Times shown in your timezone: <b>${formatTimezone(s.timezone)}</b></div>
-        <div class="actions"><button class="btn" id="back">← Back</button><button class="btn primary" id="next" ${(!s.day||!s.time)?'disabled':''}>Continue →</button></div>
+        <div class="actions"><button class="backpill" id="back" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><button class="btn primary" id="next" ${(!s.day||!s.time)?'disabled':''}>Continue</button></div>
       </div>`;
     }
 
@@ -803,7 +904,7 @@ textarea{min-height:90px;resize:vertical}
             <div class="row"><b>Email</b><span>${s.account.email||'—'}</span></div>
           </div>
           <label>Message (optional)</label><textarea id="notes" placeholder="Anything you'd like to discuss...">${s.notes}</textarea>
-          <div class="actions"><button class="btn" id="back" type="button">← Back</button><button class="btn primary" id="requestMeetingLoggedIn" type="button">Request Meeting</button></div>
+          <div class="actions"><button class="backpill" id="back" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><button class="btn primary" id="requestMeetingLoggedIn" type="button">Request Meeting</button></div>
         </div>`;
       } else {
       publicView.innerHTML=`
@@ -816,8 +917,8 @@ textarea{min-height:90px;resize:vertical}
           <label>Organization / company (optional)</label><input id="org" value="${s.org}" placeholder="ABC Company">
           <label>Email</label><input id="email" type="email" required value="${s.email}" placeholder="juan@email.com">
           <label>Phone (optional)</label><input id="phone" value="${s.phone}" placeholder="+63 912 345 6789">
-          <label>Notes (optional)</label><textarea id="notes" placeholder="Tell us anything we should know.">${s.notes}</textarea>
-          <div class="actions"><button class="btn" id="back" type="button">← Back</button><button class="btn primary" type="submit">Request Meeting</button></div>
+          <label>Notes (optional)</label><textarea id="notes" placeholder="Tell me anything I should know.">${s.notes}</textarea>
+          <div class="actions"><button class="backpill" id="back" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><button class="btn primary" type="submit">Request Meeting</button></div>
          </form>
       </div>`;
       }
@@ -839,7 +940,8 @@ textarea{min-height:90px;resize:vertical}
           <div class="row"><b><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>Guest</b><span>${s.name}${s.org?' · '+s.org:''}</span></div>
           <div class="row"><b>Status</b><span class="pill">${s.requestStatus==='Requested' ? 'Pending Host Confirmation' : s.requestStatus}</span></div>
         </div>
-        <button class="btn primary full" id="addCalendar">＋ Add to Calendar</button>
+        <button class="btn primary full" id="addGoogleCalendar">＋ Add to Google Calendar</button>
+        <button class="btn secondary full" id="addCalendar" style="margin-top:8px">Download .ics (Apple / Outlook)</button>
         ${s.account ? `
           <button class="btn full" id="goHomeFromConfirm">Back to Artimeet</button>
         ` : `
@@ -854,15 +956,15 @@ textarea{min-height:90px;resize:vertical}
     if(s.step===4){
       publicView.innerHTML=`
       <div class="panel confirm" style="max-width:420px">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="backpill" id="backFromCreateAccount" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
           <h2 style="margin:0">Create your Artimeet account</h2>
-          <button class="btn" id="backFromCreateAccount">← Back</button>
         </div>
         <div class="sub">Manage this and future meeting requests in one place.</div>
         <form id="acctForm">
           <label>First name / nickname</label><input id="acctNickname" required value="${s.name}" placeholder="Juan">
           <label>Email</label><input id="acctEmail" type="email" required value="${s.email}" placeholder="juan@email.com">
-          <button class="btn primary full" type="submit">Create account</button>
+          <button class="btn primary full" type="submit">Verify via Email</button>
         </form>
         <div class="sub" style="margin-top:26px;text-align:center">Already have an account? <a href="#" id="signInLink">Sign in</a></div>
         <div style="display:flex;align-items:center;gap:10px;margin:30px 0;color:var(--muted);font-size:12px">
@@ -876,6 +978,7 @@ textarea{min-height:90px;resize:vertical}
 
   function bind(){
     document.querySelectorAll('[data-type]').forEach(b=>b.onclick=()=>{haptic('light');s.type=b.dataset.type;render()});
+    bindChoiceScrollFocus();
     document.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{
       haptic('light');
       s.day=parseInt(b.dataset.day,10);
@@ -900,6 +1003,23 @@ textarea{min-height:90px;resize:vertical}
     document.querySelectorAll('[data-time]').forEach(b=>b.onclick=()=>{haptic('light');s.time=b.dataset.time;render()});
     document.querySelectorAll('[data-duration]').forEach(b=>b.onclick=()=>{haptic('light');s.duration=b.dataset.duration;render()});
     document.querySelectorAll('[data-location]').forEach(b=>b.onclick=()=>{haptic('light');s.location=b.dataset.location;render()});
+
+    const locationAddress=document.getElementById('locationAddress');
+    if(locationAddress) locationAddress.oninput=()=>{s.locationAddress=locationAddress.value};
+    const openGoogleMaps=document.getElementById('openGoogleMaps');
+    if(openGoogleMaps) openGoogleMaps.onclick=()=>{
+      const q=(document.getElementById('locationAddress').value||'').trim();
+      if(!q){ alert('Please enter a place first.'); return; }
+      haptic('light');
+      window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`,'_blank');
+    };
+    const openWaze=document.getElementById('openWaze');
+    if(openWaze) openWaze.onclick=()=>{
+      const q=(document.getElementById('locationAddress').value||'').trim();
+      if(!q){ alert('Please enter a place first.'); return; }
+      haptic('light');
+      window.open(`https://waze.com/ul?q=${encodeURIComponent(q)}&navigate=yes`,'_blank');
+    };
 
     const next=document.getElementById('next');
     if(next) next.onclick=()=>{haptic('medium');s.step++;render()};
@@ -1009,6 +1129,30 @@ textarea{min-height:90px;resize:vertical}
     if(cancelEditProfile) cancelEditProfile.onclick=()=>{s.editingProfile=false;render()};
     const cancelEditProfile2=document.getElementById('cancelEditProfile2');
     if(cancelEditProfile2) cancelEditProfile2.onclick=()=>{s.editingProfile=false;render()};
+
+    const pfAvatarBtn=document.getElementById('pfAvatarBtn');
+    if(pfAvatarBtn) pfAvatarBtn.onclick=()=>document.getElementById('pfAvatarFile').click();
+    const pfAvatarFile=document.getElementById('pfAvatarFile');
+    if(pfAvatarFile) pfAvatarFile.onchange=async ()=>{
+      const file=pfAvatarFile.files[0];
+      if(!file || !s.account) return;
+      try{
+        const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+        const path=`${s.account.id}/avatar.${ext}`;
+        const { error: uploadError } = await sb.storage.from('avatars').upload(path, file, { upsert:true, cacheControl:'3600' });
+        if(uploadError) throw new Error(uploadError.message);
+        const { data:urlData } = sb.storage.from('avatars').getPublicUrl(path);
+        const publicUrl = urlData.publicUrl + '?t=' + Date.now();
+        const { error: dbError } = await sb.from('profiles').update({avatar_url:publicUrl}).eq('id', s.account.id);
+        if(dbError) throw new Error(dbError.message);
+        s.account={...s.account, avatarUrl:publicUrl};
+        saveSession();
+        render();
+      }catch(err){
+        alert('Could not upload photo: '+((err&&err.message)||'Please try again.'));
+      }
+    };
+
     const profileForm=document.getElementById('profileForm');
     if(profileForm) profileForm.onsubmit=async e=>{
       e.preventDefault();
@@ -1041,6 +1185,11 @@ textarea{min-height:90px;resize:vertical}
     document.querySelectorAll('[data-ics]').forEach(b=>b.onclick=()=>{
       const m=s.meetings.find(x=>x.meetingId===b.dataset.ics);
       if(m) downloadIcs(m);
+    });
+    document.querySelectorAll('[data-gcal]').forEach(b=>b.onclick=()=>{
+      const m=s.meetings.find(x=>x.meetingId===b.dataset.gcal);
+      const url=m && googleCalendarUrl(m);
+      if(url) window.open(url,'_blank');
     });
 
     const signInEmailForm=document.getElementById('signInEmailForm');
@@ -1082,7 +1231,13 @@ textarea{min-height:90px;resize:vertical}
     };
 
     const ac=document.getElementById('addCalendar');
-    if(ac) ac.onclick=()=>downloadIcs({meetingId:s.meetingId,type:s.type,location:s.location});
+    if(ac) ac.onclick=()=>downloadIcs({meetingId:s.meetingId,type:s.type,location:s.location,date:s.date,time:s.time,duration:s.duration});
+
+    const agc=document.getElementById('addGoogleCalendar');
+    if(agc) agc.onclick=()=>{
+      const url=googleCalendarUrl({meetingId:s.meetingId,type:s.type,location:s.location,date:s.date,time:s.time,duration:s.duration});
+      if(url) window.open(url,'_blank');
+    };
 
     const nr=document.getElementById('newRequest');
     if(nr) nr.onclick=()=>{resetRequestFlow();s.step=0;render()};
@@ -1156,14 +1311,28 @@ textarea{min-height:90px;resize:vertical}
   // ABM-V10-83737105 : restore cached meetings from localStorage on load (fast paint only)
   loadSession();
 
+  function hideSplash(){
+    const splash=document.getElementById('splash');
+    if(splash) splash.classList.add('hide');
+  }
+
   // ABM-V1-83736307 : TODO(auth) — swap this for a real authenticated /internal route
   if(new URLSearchParams(location.search).get('internal')==='1'){
     showAdmin();
+    hideSplash();
   } else {
     render();
     // ABM-AUTH : reconcile with the real Supabase session — this is the actual
-    // "session restoration after refresh" step (overrides the render() above once resolved)
-    restoreSupabaseSession();
+    // "session restoration after refresh" step (overrides the render() above once resolved).
+    // The splash stays up at least MIN_SPLASH_MS so it never looks like a flicker on fast
+    // connections, and clears right after — this is also what hides the brief re-login flash.
+    const splashStart=Date.now();
+    const MIN_SPLASH_MS=700;
+    restoreSupabaseSession().then(()=>{
+      const elapsed=Date.now()-splashStart;
+      const wait=Math.max(0, MIN_SPLASH_MS-elapsed);
+      setTimeout(hideSplash, wait);
+    });
   }
 })();
 </script>
