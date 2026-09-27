@@ -571,6 +571,24 @@ textarea{min-height:90px;resize:vertical}
       });
     }
     saveSession();
+    notifyBackend('requested', {
+      meetingId:s.meetingId, type:s.type, date:s.date, time:s.time,
+      duration:s.duration, location:s.location, name:name, org:org,
+      email:email, phone:phone, notes:notes
+    });
+  }
+
+  // ── EMAIL NOTIFICATIONS (Supabase Edge Function → Resend) ──────────────
+  // TODO(you): deploy the "notify-meeting" Edge Function and set your RESEND_API_KEY
+  // secret on Supabase before this will actually send mail.
+  async function notifyBackend(kind, meeting){
+    try{
+      await fetch(`${SUPABASE_URL}/functions/v1/notify-meeting`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':`Bearer ${SUPABASE_ANON_KEY}`},
+        body: JSON.stringify({ kind, meeting })
+      });
+    }catch(e){ console.error('notifyBackend failed:', e); }
   }
 
   // Advances the UI to the confirmation screen — only called once saveMeetingRequest
@@ -1117,13 +1135,22 @@ textarea{min-height:90px;resize:vertical}
       s.calendarStatus='Synced';
       document.getElementById('calStatus').textContent='Synced';
       document.getElementById('calStatus').className='pill green';
+      notifyBackend('confirmed', {meetingId:s.meetingId, type:s.type, date:s.date, time:s.time, location:s.location, email:s.email, name:s.name});
     };
-    document.getElementById('reviewing').onclick=()=>setReqStatus('Reviewing','blue');
+    document.getElementById('reviewing').onclick=()=>{
+      setReqStatus('Reviewing','blue');
+      notifyBackend('reviewing', {meetingId:s.meetingId, type:s.type, date:s.date, time:s.time, location:s.location, email:s.email, name:s.name});
+    };
     document.getElementById('reschedule').onclick=()=>{
       setReqStatus('Reschedule Requested','purple');
+      notifyBackend('reschedule', {meetingId:s.meetingId, type:s.type, date:s.date, time:s.time, location:s.location, email:s.email, name:s.name});
       alert('TODO(backend): trigger reschedule workflow / calendar hold release.');
     };
-    document.getElementById('cancel').onclick=()=>{haptic('warning');setReqStatus('Cancelled','gray');};
+    document.getElementById('cancel').onclick=()=>{
+      haptic('warning');
+      setReqStatus('Cancelled','gray');
+      notifyBackend('cancelled', {meetingId:s.meetingId, type:s.type, date:s.date, time:s.time, location:s.location, email:s.email, name:s.name});
+    };
   }
 
   // ABM-V10-83737105 : restore cached meetings from localStorage on load (fast paint only)
