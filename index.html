@@ -27,11 +27,9 @@
 body{margin:0;background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",ui-sans-serif,system-ui,"Segoe UI",sans-serif}
  button,input,textarea{font:inherit}
 button{cursor:pointer;-webkit-appearance:none;appearance:none}
-/* === START: ARTIMEET LANDING CENTER === */
 /* === START: ARTIMEET GLOBAL SCREEN CENTER === */
 .app{max-width:980px;margin:auto;padding:24px;min-height:calc(100vh - 48px);display:flex;flex-direction:column;justify-content:center}
 /* === END: ARTIMEET GLOBAL SCREEN CENTER === */
-/* === END: ARTIMEET LANDING CENTER === */
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .brand{font-weight:800;font-size:19px;letter-spacing:-.01em}
 .menu{width:44px;height:44px;border:1px solid var(--line);background:#fff;border-radius:13px;font-size:20px}
@@ -60,7 +58,9 @@ h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px;font-weight:800;color:#
 .primary{background:rgba(255,255,255,.78);color:var(--ink);border:1px solid rgba(0,0,0,.08);box-shadow:0 10px 24px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .btn.secondary{background:rgba(242,242,247,.7);border:none;color:var(--ink);box-shadow:none;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .btn.ghost{background:transparent;border:none;color:var(--muted);box-shadow:none}
-.backpill{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:50%;border:1px solid rgba(0,0,0,.07);background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.6);color:var(--ink);flex:none}
+/* === START: ARTIMEET BACKPILL STICKY GLASS === */
+.backpill{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:50%;border:1px solid rgba(0,0,0,.07);background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.6);color:var(--ink);flex:none;position:sticky;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:50}
+/* === END: ARTIMEET BACKPILL STICKY GLASS === */
 .backpill svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .avatarRow{display:flex;align-items:center;gap:14px;margin-top:7px}
 .avatarPreview{width:64px;height:64px;border-radius:50%;overflow:hidden;background:#f2f2f7;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:var(--muted);flex:none;border:1px solid var(--line)}
@@ -103,6 +103,10 @@ h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px;font-weight:800;color:#
 .iconpill:hover::after,.iconpill:hover::before{opacity:1;transform:translateX(-50%) translateY(0)}
 .maplinks{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .maplinks .btn{flex:1;min-width:140px;background:#f2f2f7;border:none;color:var(--ink);font-size:13px;padding:12px 14px}
+/* === START: ARTIMEET ACCOUNT SYSTEM — INFO LIST === */
+.infolist{margin:10px 0 0;padding-left:18px;color:var(--muted);line-height:1.7;font-size:13.5px}
+.infolist li{margin-bottom:4px}
+/* === END: ARTIMEET ACCOUNT SYSTEM — INFO LIST === */
 
 /* ABM-V11-83737205 : unified press system. PRESSED (:active pseudo, transient — while finger/cursor is down)
    is intentionally separate from SELECTED (.active class, persistent — set by JS after a choice is made).
@@ -147,9 +151,12 @@ h2{font-size:28px;letter-spacing:-.03em;margin:5px 0 8px;font-weight:800;color:#
 .icon{width:15px;height:15px;vertical-align:-2px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;display:inline-block;margin-right:6px}
 a{color:var(--ink);font-weight:700;text-decoration:none}
 label{display:block;font-size:11px;font-weight:600;margin:14px 0 7px;color:#1c1c1e}
-input,textarea{width:100%;border:1px solid #e5e5ea;border-radius:12px;padding:13px 14px;background:#f2f2f7;outline:none;color:#1c1c1e}
-input:focus,textarea:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(28,28,30,.08)}
+input,textarea,select{width:100%;border:1px solid #e5e5ea;border-radius:12px;padding:13px 14px;background:#f2f2f7;outline:none;color:#1c1c1e}
+input:focus,textarea:focus,select:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(28,28,30,.08)}
 textarea{min-height:90px;resize:vertical}
+/* === START: ARTIMEET SELECT DROPDOWN STYLE === */
+select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px;background-repeat:no-repeat;background-position:right 14px center;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='%238e8e93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
+/* === END: ARTIMEET SELECT DROPDOWN STYLE === */
 .actions{display:flex;gap:10px;margin-top:18px}
 .actions .primary{flex:1}
 .actions .btn:not(.primary){border:1px solid rgba(0,0,0,.07);background:rgba(255,255,255,.55);color:var(--ink);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 6px 16px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.6)}
@@ -233,6 +240,8 @@ textarea{min-height:90px;resize:vertical}
     day:null,
     date:null,
     time:null,
+    timeBase:null, // === ARTIMEET MINUTE PRECISION : the picked hour-slot (e.g. "9:00 AM") before minute adjustment ===
+    minute:'00',   // === ARTIMEET MINUTE PRECISION : user-picked minute, combined with timeBase to form final s.time ===
     duration:'30 min',
     location:'Videocall / Virtual Call',
     locationAddress:'',
@@ -245,8 +254,15 @@ textarea{min-height:90px;resize:vertical}
     calendarStatus:'Not synced',
     account:null, // null = guest. Once "created": { name, email, org, phone, timezone }
     meetings:[],  // this user's own requests only — never other people's
-    view:'landing', // 'landing' (sign in / sign up / guest, shown on first open) | 'flow' (booking wizard, uses s.step) | 'home' | 'myMeetings' | 'myProfile' | 'signInEmail' | 'otp'
+    view:'landing', // 'landing' | 'flow' | 'home' | 'account' | 'myMeetings' (Activity) | 'meetingDetail' | 'myProfile' | 'notifications' | 'settings' | 'privacyData' | 'signInEmail' | 'otp'
     editingProfile:false,
+    // === START: ARTIMEET ACCOUNT SYSTEM STATE ===
+    activityTab:'upcoming',     // 'upcoming' | 'past' | 'cancelled' — filters the Activity list
+    selectedMeetingId:null,     // which meeting is open in the Meeting Detail screen
+    notifPrefs:{confirmed:true, updated:true, reminder:true, system:true}, // TODO(backend): persist to a profiles.notif_prefs jsonb column instead of localStorage-only
+    notifReturnView:'account',     // where Notifications' back button goes — set to whichever screen opened it
+    profileReturnView:'myProfile', // where Edit Profile's cancel/save goes — set to whichever screen opened it
+    // === END: ARTIMEET ACCOUNT SYSTEM STATE ===
     // ── auth (OTP) state ──
     authEmail:'',        // email the OTP was sent to
     authNickname:'',     // nickname collected at sign-up, applied after verification
@@ -279,7 +295,19 @@ textarea{min-height:90px;resize:vertical}
     if(_scrollFocusObserver){ _scrollFocusObserver.disconnect(); _scrollFocusObserver=null; }
   }
 
-  const types=['Business / Partnership','Product Demo','Client Meeting','Technical Discussion','Career / Hiring','Other'];
+  // === START: ARTIMEET MEETING TYPES — 30 OPTIONS ===
+  const types=[
+    'Business / Partnership','Product Demo','Client Meeting','Technical Discussion','Career / Hiring',
+    'Sales Consultation','Project Kickoff','Project Status Update','Contract / Proposal Review',
+    'Investor Pitch','Vendor / Supplier Meeting','Onboarding Session','Training / Workshop',
+    'Strategy Planning','Budget / Finance Review','Marketing Consultation','Design Review',
+    'Legal Consultation','HR / Performance Review','Customer Support / Troubleshooting',
+    'Networking / Introduction','Mentorship / Coaching','Media / Press Interview',
+    'Speaking Engagement / Event','Real Estate Consultation','Financial Advisory',
+    'Medical / Health Consultation','Academic / Research Discussion','Volunteer / Community Meeting',
+    'Other'
+  ];
+  // === END: ARTIMEET MEETING TYPES — 30 OPTIONS ===
   const locations=['Videocall / Virtual Call','Phone Call','In Person'];
   const locationIcons={
     'Videocall / Virtual Call':'<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6.5" width="13" height="11" rx="2.5"/><path d="M15.5 10.5l6-3.5v10l-6-3.5z"/></svg>',
@@ -397,7 +425,7 @@ textarea{min-height:90px;resize:vertical}
   // TODO(backend): replace with real DB + auth (localStorage is not a substitute for a server-side data store).
   function saveSession(){
     try{
-      localStorage.setItem('artimeet_session', JSON.stringify({account:s.account, meetings:s.meetings}));
+      localStorage.setItem('artimeet_session', JSON.stringify({account:s.account, meetings:s.meetings, notifPrefs:s.notifPrefs}));
     }catch(e){ /* storage unavailable — fail silently, app still works in-memory */ }
   }
   function loadSession(){
@@ -408,6 +436,9 @@ textarea{min-height:90px;resize:vertical}
       if(raw){
         const parsed=JSON.parse(raw);
         if(Array.isArray(parsed.meetings)) s.meetings=parsed.meetings;
+        // === START: ARTIMEET NOTIF PREFS RESTORE ===
+        if(parsed.notifPrefs) s.notifPrefs={...s.notifPrefs, ...parsed.notifPrefs};
+        // === END: ARTIMEET NOTIF PREFS RESTORE ===
       }
     }catch(e){ /* corrupted or unavailable — start clean */ }
   }
@@ -688,7 +719,7 @@ textarea{min-height:90px;resize:vertical}
   // ABM-V10-83737103 : single source of truth for clearing per-request transient state before starting a new request
   function resetRequestFlow(){
     s.type=null;
-    s.day=null; s.date=null; s.time=null;
+    s.day=null; s.date=null; s.time=null; s.timeBase=null; s.minute='00';
     s.duration='30 min'; s.location='Videocall / Virtual Call';
     s.availableTimes=[]; s.loadingTimes=false;
     s.name=''; s.org=''; s.email=''; s.phone=''; s.notes='';
@@ -719,29 +750,71 @@ textarea{min-height:90px;resize:vertical}
           <div class="sub">${s.account?s.account.email:''}</div>
         </div>
       </div>
+      <!-- === START: ARTIMEET HOME 3-CHOICE NAV === -->
       <div class="choices" style="margin-top:20px">
         <button class="choice" id="goNewRequest"><span class="dot"></span><span>New meeting request</span></button>
-        <button class="choice" id="goMyMeetings"><span class="dot"></span><span>My meetings (${s.meetings.length})</span></button>
-        <button class="choice" id="goMyProfile"><span class="dot"></span><span>My profile</span></button>
+        <button class="choice" id="goMyMeetings"><span class="dot"></span><span>Activity (${s.meetings.length})</span></button>
+        <button class="choice" id="goAccount"><span class="dot"></span><span>Account</span></button>
       </div>
-      <button class="btn full" id="signOut" style="margin-top:20px">Sign out</button>
+      <!-- === END: ARTIMEET HOME 3-CHOICE NAV === -->
     </div>`;
   }
 
+  // === START: ARTIMEET ACTIVITY CLASSIFICATION ===
+  function meetingBucket(m){
+    if(m.requestStatus==='Cancelled') return 'cancelled';
+    const d=new Date(m.date);
+    const todayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    return (!isNaN(d.getTime()) && d<todayStart) ? 'past' : 'upcoming';
+  }
+  // === END: ARTIMEET ACTIVITY CLASSIFICATION ===
+
+  // === START: ARTIMEET ACCOUNT HUB ===
+  function renderAccountHub(){
+    publicView.innerHTML=`
+    <div class="panel">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="backpill" id="backAccount" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <h2 style="margin:0">Account</h2>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;margin-top:16px">
+        <div class="avatarPreview" style="width:52px;height:52px;font-size:18px">${s.account&&s.account.avatarUrl?`<img src="${s.account.avatarUrl}">`:`<span>${(s.account&&s.account.name?s.account.name[0]:'?').toUpperCase()}</span>`}</div>
+        <div>
+          <div style="font-weight:750">${s.account&&s.account.name?s.account.name:'Guest'}</div>
+          <div class="sub">${s.account?s.account.email:''}</div>
+        </div>
+      </div>
+      <div class="choices" style="margin-top:20px">
+        <button class="choice" id="goMyProfile"><span class="dot"></span><span>Profile</span></button>
+        <button class="choice" id="goNotifications"><span class="dot"></span><span>Notifications</span></button>
+        <button class="choice" id="goSettings"><span class="dot"></span><span>Settings</span></button>
+      </div>
+    </div>`;
+  }
+  // === END: ARTIMEET ACCOUNT HUB ===
+
+  // === START: ARTIMEET ACTIVITY (formerly My Meetings) ===
   function renderMyMeetings(){
+    const filtered=s.meetings.filter(m=>meetingBucket(m)===s.activityTab);
     publicView.innerHTML=`
     <div class="panel">
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
         <button class="backpill" id="backHome" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
-        <div><h2 style="margin:0">My Meetings</h2></div>
+        <div><h2 style="margin:0">Activity</h2></div>
       </div>
-      ${s.meetings.length===0 ? `
+      <div class="duration duration-pills" style="margin-top:14px">
+        <button class="btn ${s.activityTab==='upcoming'?'active':''}" data-activitytab="upcoming">Upcoming</button>
+        <button class="btn ${s.activityTab==='past'?'active':''}" data-activitytab="past">Past</button>
+        <button class="btn ${s.activityTab==='cancelled'?'active':''}" data-activitytab="cancelled">Cancelled</button>
+      </div>
+      <div style="margin-top:14px">
+      ${filtered.length===0 ? `
         <div style="text-align:center;padding:36px 12px">
-          <div style="font-weight:750;font-size:15px;margin-bottom:6px">No meetings yet</div>
-          <p class="sub" style="margin:0">Your confirmed and pending meeting requests will appear here.</p>
+          <div style="font-weight:750;font-size:15px;margin-bottom:6px">No ${s.activityTab} meetings</div>
+          <p class="sub" style="margin:0">${s.activityTab==='upcoming'?'Your confirmed and pending requests will appear here.':s.activityTab==='past'?'Meetings that already happened will appear here.':'Cancelled requests will appear here.'}</p>
         </div>
-      ` : s.meetings.map(m=>`
-        <div class="req">
+      ` : filtered.map(m=>`
+        <div class="req" data-meeting="${m.meetingId}" style="cursor:pointer">
           <div class="reqhead">
             <div><b>${m.meetingId} · ${m.date} · ${m.time}</b><small>${m.type} · ${m.location}</small></div>
             <div class="pillrow"><span class="pill ${m.requestStatus==='Confirmed'?'green':m.requestStatus==='Reviewing'?'blue':m.requestStatus==='Cancelled'?'gray':''}">${m.requestStatus}</span></div>
@@ -749,9 +822,109 @@ textarea{min-height:90px;resize:vertical}
           <div class="reqactions"><button class="btn" data-gcal="${m.meetingId}">＋ Google Calendar</button><button class="btn" data-ics="${m.meetingId}">Download .ics</button></div>
         </div>
       `).join('')}
+      </div>
       <button class="btn primary full" id="goNewRequest2" style="margin-top:16px">+ New request</button>
     </div>`;
   }
+  // === END: ARTIMEET ACTIVITY ===
+
+  // === START: ARTIMEET MEETING DETAIL ===
+  function renderMeetingDetail(){
+    const m=s.meetings.find(x=>x.meetingId===s.selectedMeetingId);
+    if(!m){ s.view='myMeetings'; renderMyMeetings(); return; }
+    publicView.innerHTML=`
+    <div class="panel confirm">
+      <div style="display:flex;align-items:center;gap:12px;text-align:left">
+        <button class="backpill" id="backFromMeetingDetail" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <h2 style="margin:0">Meeting Details</h2>
+      </div>
+      <div class="summary" style="text-align:left;margin-top:18px">
+        <div class="row"><b>Reference</b><span>${m.meetingId}</span></div>
+        <div class="row"><b>Date</b><span>${m.date}</span></div>
+        <div class="row"><b>Time</b><span>${m.time}</span></div>
+        <div class="row"><b>Type</b><span>${m.type}</span></div>
+        <div class="row"><b>Location</b><span>${m.location}</span></div>
+        <div class="row"><b>Status</b><span class="pill ${m.requestStatus==='Confirmed'?'green':m.requestStatus==='Reviewing'?'blue':m.requestStatus==='Cancelled'?'gray':''}">${m.requestStatus}</span></div>
+      </div>
+      <button class="btn primary full" data-gcal="${m.meetingId}">＋ Add to Google Calendar</button>
+      <button class="btn secondary full" data-ics="${m.meetingId}" style="margin-top:8px">Download .ics (Apple / Outlook)</button>
+    </div>`;
+  }
+  // === END: ARTIMEET MEETING DETAIL ===
+
+  // === START: ARTIMEET NOTIFICATIONS SCREEN ===
+  function renderNotifications(){
+    const items=[
+      {key:'confirmed', label:'Meeting confirmed', desc:'When a host confirms your request.'},
+      {key:'updated',   label:'Meeting updated',   desc:'When the date, time, or details change.'},
+      {key:'reminder',  label:'Reminder',          desc:'A heads-up before your meeting starts.'},
+      {key:'system',    label:'System messages',   desc:'Account and product updates from Artimeet.'}
+    ];
+    publicView.innerHTML=`
+    <div class="panel confirm" style="max-width:420px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="backpill" id="backFromNotifications" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <h2 style="margin:0">Notifications</h2>
+      </div>
+      <div class="sub" style="text-align:left;margin-top:4px">Choose what you'd like to be notified about.</div>
+      <div class="summary" style="text-align:left;margin-top:16px">
+        ${items.map(it=>`
+          <div class="row">
+            <b style="min-width:0;flex:1"><span style="display:block;color:var(--ink);font-weight:700">${it.label}</span><span style="display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:2px">${it.desc}</span></b>
+            <span class="pill ${s.notifPrefs[it.key]?'green':'gray'}" data-notiftoggle="${it.key}" style="cursor:pointer">${s.notifPrefs[it.key]?'On':'Off'}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }
+  // === END: ARTIMEET NOTIFICATIONS SCREEN ===
+
+  // === START: ARTIMEET SETTINGS SCREEN ===
+  function renderSettings(){
+    publicView.innerHTML=`
+    <div class="panel confirm" style="max-width:420px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="backpill" id="backFromSettings" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <h2 style="margin:0">Settings</h2>
+      </div>
+      <div class="sub" style="text-align:left;margin-top:2px">Timezone: ${s.account?formatTimezone(s.account.timezone):formatTimezone(s.timezone)}</div>
+      <div class="choices" style="margin-top:16px">
+        <button class="choice" id="goEditProfileFromSettings"><span class="dot"></span><span>Edit Profile</span></button>
+        <button class="choice" id="goNotifications"><span class="dot"></span><span>Notifications</span></button>
+        <button class="choice" id="goPrivacyData"><span class="dot"></span><span>Privacy &amp; Data</span></button>
+      </div>
+      <button class="btn full" id="signOut" style="margin-top:20px">Sign out</button>
+    </div>`;
+  }
+  // === END: ARTIMEET SETTINGS SCREEN ===
+
+  // === START: ARTIMEET PRIVACY & DATA SCREEN ===
+  function renderPrivacyData(){
+    publicView.innerHTML=`
+    <div class="panel confirm" style="max-width:460px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="backpill" id="backFromPrivacyData" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <h2 style="margin:0">Privacy &amp; Data</h2>
+      </div>
+      <div style="text-align:left;margin-top:16px">
+        <div style="font-weight:750">What information is stored</div>
+        <ul class="infolist">
+          <li>Name, email, organization, phone, timezone</li>
+          <li>Profile photo (if you upload one)</li>
+          <li>Your meeting requests and their status</li>
+        </ul>
+        <div style="font-weight:750;margin-top:16px">What it's used for</div>
+        <ul class="infolist">
+          <li>Confirming and managing your meeting requests</li>
+          <li>Showing your details to the host you're meeting with</li>
+          <li>Sending the notifications you've turned on</li>
+        </ul>
+      </div>
+      <button class="btn full" id="downloadMyData" style="margin-top:22px">Download my data</button>
+      <button class="btn secondary full" id="deleteAccount" style="margin-top:8px;color:#c0392b">Delete account</button>
+    </div>`;
+  }
+  // === END: ARTIMEET PRIVACY & DATA SCREEN ===
 
   function renderMyProfile(){
     if(s.editingProfile){
@@ -795,7 +968,6 @@ textarea{min-height:90px;resize:vertical}
         <div class="row"><b>Timezone</b><span>${s.account?formatTimezone(s.account.timezone):''}</span></div>
       </div>
       <button class="btn full" id="editProfile">Edit profile</button>
-      <button class="btn full" id="signOut2">Sign out</button>
     </div>`;
   }
 
@@ -849,8 +1021,13 @@ textarea{min-height:90px;resize:vertical}
 
     if(s.view==='landing'){ renderLanding(); bind(); return; }
     if(s.view==='home'){ renderHome(); bind(); return; }
+    if(s.view==='account'){ renderAccountHub(); bind(); return; }
     if(s.view==='myMeetings'){ renderMyMeetings(); bind(); return; }
+    if(s.view==='meetingDetail'){ renderMeetingDetail(); bind(); return; }
     if(s.view==='myProfile'){ renderMyProfile(); bind(); return; }
+    if(s.view==='notifications'){ renderNotifications(); bind(); return; }
+    if(s.view==='settings'){ renderSettings(); bind(); return; }
+    if(s.view==='privacyData'){ renderPrivacyData(); bind(); return; }
     if(s.view==='signInEmail'){ renderSignInEmail(); bind(); return; }
     if(s.view==='otp'){ renderOtp(); bind(); return; }
 
@@ -863,10 +1040,14 @@ textarea{min-height:90px;resize:vertical}
         </div>
         <!-- === END: ARTIMEET BACKPILL TOPLEFT — STEP0 === -->
         <h1>Let's find a time.</h1>
-        <p>Tell us what you'd like to discuss — we'll take it from there.</p>
-        <div class="choices">
-          ${types.map(t=>`<button class="choice ${s.type===t?'active':''}" data-type="${t}"><span class="dot"></span><span>${t}</span></button>`).join('')}
-        </div>
+        <p>Tell me what you'd like to discuss — we'll take it from there.</p>
+        <!-- === START: ARTIMEET STEP0 TYPE DROPDOWN === -->
+        <label style="margin-top:20px">Meeting type</label>
+        <select id="typeSelect">
+          <option value="" ${!s.type?'selected':''} disabled>Select a topic</option>
+          ${types.map(t=>`<option value="${t}" ${s.type===t?'selected':''}>${t}</option>`).join('')}
+        </select>
+        <!-- === END: ARTIMEET STEP0 TYPE DROPDOWN === -->
         <button class="btn primary full" id="next" ${!s.type?'disabled':''}>Continue</button>
       </div>`;
     }
@@ -898,8 +1079,16 @@ textarea{min-height:90px;resize:vertical}
           !s.day ? `<span class="sub">Select an available date above.</span>` :
           s.loadingTimes ? `<span class="sub">Checking suggested time slots…</span>` :
           s.availableTimes.length===0 ? `<span class="sub">No suggested times for this date — you can still request a time that works for you.</span>` :
-          s.availableTimes.map(t=>`<button class="btn time ${s.time===t?'active':''}" data-time="${t}">${t}</button>`).join('')
+          s.availableTimes.map(t=>`<button class="btn time ${s.timeBase===t?'active':''}" data-time="${t}">${t}</button>`).join('')
         }</div>
+        <!-- === START: ARTIMEET MINUTE PRECISION DROPDOWN === -->
+        ${s.time ? `<div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+          <span class="sub" style="margin:0">at</span>
+          <select id="minuteSelect" style="width:auto;padding:8px 32px 8px 12px;font-size:13px">
+            ${['00','15','30','45'].map(m=>`<option value="${m}" ${s.minute===m?'selected':''}>:${m}</option>`).join('')}
+          </select>
+        </div>` : ''}
+        <!-- === END: ARTIMEET MINUTE PRECISION DROPDOWN === -->
         <div style="margin-top:20px;font-weight:750">Duration</div>
         <div class="duration duration-pills">${['30 min','45 min','60 min','Flexible'].map(d=>`<button class="btn ${s.duration===d?'active':''}" data-duration="${d}">${d}</button>`).join('')}</div>
         ${s.duration==='Flexible' ? `<div class="sub" style="margin-top:8px">We'll settle the exact duration with you once confirmed.</div>` : ''}
@@ -1004,8 +1193,10 @@ textarea{min-height:90px;resize:vertical}
         </div>
         <div class="sub">Manage this and future meeting requests in one place.</div>
         <form id="acctForm">
-          <label>First name / nickname</label><input id="acctNickname" required value="${s.name}" placeholder="Juan">
-          <label>Email</label><input id="acctEmail" type="email" required value="${s.email}" placeholder="juan@email.com">
+          <!-- === START: ARTIMEET UX PLACEHOLDERS — CREATE ACCOUNT === -->
+          <input id="acctNickname" required value="${s.name}" placeholder="Nickname" style="margin-top:14px">
+          <input id="acctEmail" type="email" required value="${s.email}" placeholder="Email" style="margin-top:10px">
+          <!-- === END: ARTIMEET UX PLACEHOLDERS — CREATE ACCOUNT === -->
           <button class="btn primary full" type="submit">Verify via Email</button>
         </form>
         <div class="sub" style="margin-top:26px;text-align:center">Already have an account? <a href="#" id="signInLink">Sign in</a></div>
@@ -1021,11 +1212,16 @@ textarea{min-height:90px;resize:vertical}
   function bind(){
     document.querySelectorAll('[data-type]').forEach(b=>b.onclick=()=>{haptic('light');s.type=b.dataset.type;render()});
     bindChoiceScrollFocus();
+
+    // === START: ARTIMEET STEP0 TYPE DROPDOWN HANDLER ===
+    const typeSelect=document.getElementById('typeSelect');
+    if(typeSelect) typeSelect.onchange=()=>{haptic('light');s.type=typeSelect.value;render()};
+    // === END: ARTIMEET STEP0 TYPE DROPDOWN HANDLER ===
     document.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{
       haptic('light');
       s.day=parseInt(b.dataset.day,10);
       s.date=`${monthNames[s.viewMonth]} ${s.day}, ${s.viewYear}`;
-      s.time=null;
+      s.time=null; s.timeBase=null; s.minute='00';
       fetchAvailableTimes(s.viewYear,s.viewMonth,s.day);
     });
     const prevMonth=document.getElementById('prevMonth');
@@ -1033,17 +1229,41 @@ textarea{min-height:90px;resize:vertical}
     if(prevMonth) prevMonth.onclick=()=>{
       if(s.viewYear===now.getFullYear()&&s.viewMonth===now.getMonth()) return;
       s.viewMonth--; if(s.viewMonth<0){s.viewMonth=11;s.viewYear--;}
-      s.day=null; s.time=null; s.availableTimes=[];
+      s.day=null; s.time=null; s.timeBase=null; s.minute='00'; s.availableTimes=[];
       render();
     };
     const nextMonth=document.getElementById('nextMonth');
     if(nextMonth) nextMonth.onclick=()=>{
       s.viewMonth++; if(s.viewMonth>11){s.viewMonth=0;s.viewYear++;}
-      s.day=null; s.time=null; s.availableTimes=[];
+      s.day=null; s.time=null; s.timeBase=null; s.minute='00'; s.availableTimes=[];
       render();
     };
-    document.querySelectorAll('[data-time]').forEach(b=>b.onclick=()=>{haptic('light');s.time=b.dataset.time;render()});
+    // === START: ARTIMEET MINUTE PRECISION — HOUR SLOT PICK ===
+    document.querySelectorAll('[data-time]').forEach(b=>b.onclick=()=>{
+      haptic('light');
+      s.timeBase=b.dataset.time;
+      s.minute='00';
+      s.time=b.dataset.time;
+      render();
+    });
+    // === END: ARTIMEET MINUTE PRECISION — HOUR SLOT PICK ===
     document.querySelectorAll('[data-duration]').forEach(b=>b.onclick=()=>{haptic('light');s.duration=b.dataset.duration;render()});
+
+    // === START: ARTIMEET MINUTE PRECISION — DROPDOWN HANDLER ===
+    const minuteSelect=document.getElementById('minuteSelect');
+    if(minuteSelect) minuteSelect.onchange=()=>{
+      haptic('light');
+      const m=minuteSelect.value;
+      s.minute=m;
+      if(s.timeBase){
+        const parts=s.timeBase.split(' '); // e.g. ["9:00","AM"]
+        const hour=parts[0].split(':')[0];
+        const ampm=parts[1];
+        s.time=`${hour}:${m} ${ampm}`;
+      }
+      render();
+    };
+    // === END: ARTIMEET MINUTE PRECISION — DROPDOWN HANDLER ===
     document.querySelectorAll('[data-location]').forEach(b=>b.onclick=()=>{haptic('light');s.location=b.dataset.location;render()});
 
     const locationAddress=document.getElementById('locationAddress');
@@ -1067,11 +1287,12 @@ textarea{min-height:90px;resize:vertical}
     if(next) next.onclick=()=>{haptic('medium');s.step++;render()};
 
     const back=document.getElementById('back');
-    if(back) back.onclick=()=>{s.step--;render()};
+    if(back) back.onclick=()=>{haptic('light');s.step--;render()};
 
     // === START: ARTIMEET BACKPILL HANDLER — STEP0 ===
     const backFromStep0=document.getElementById('backFromStep0');
     if(backFromStep0) backFromStep0.onclick=()=>{
+      haptic('light');
       if(s.account){ s.view='home'; render(); }
       else { resetRequestFlow(); s.view='landing'; render(); }
     };
@@ -1104,6 +1325,7 @@ textarea{min-height:90px;resize:vertical}
     // === START: ARTIMEET BACKPILL HANDLER — CONFIRM ===
     const backFromConfirm=document.getElementById('backFromConfirm');
     if(backFromConfirm) backFromConfirm.onclick=()=>{
+      haptic('light');
       if(s.account){ s.view='home'; render(); }
       else { resetRequestFlow(); s.view='landing'; render(); }
     };
@@ -1162,6 +1384,7 @@ textarea{min-height:90px;resize:vertical}
     };
     const backFromCreateAccount=document.getElementById('backFromCreateAccount');
     if(backFromCreateAccount) backFromCreateAccount.onclick=()=>{
+      haptic('light');
       s.view=s.authReturnView; s.step=s.authReturnStep; render();
     };
 
@@ -1170,20 +1393,79 @@ textarea{min-height:90px;resize:vertical}
     const goNewRequest2=document.getElementById('goNewRequest2');
     if(goNewRequest2) goNewRequest2.onclick=()=>{resetRequestFlow();s.view='flow';s.step=0;render()};
     const goMyMeetings=document.getElementById('goMyMeetings');
-    if(goMyMeetings) goMyMeetings.onclick=async ()=>{ await loadMyMeetings(); s.view='myMeetings'; render(); };
+    if(goMyMeetings) goMyMeetings.onclick=async ()=>{ haptic('light'); await loadMyMeetings(); s.view='myMeetings'; render(); };
     const goMyProfile=document.getElementById('goMyProfile');
-    if(goMyProfile) goMyProfile.onclick=()=>{s.view='myProfile';render()};
+    if(goMyProfile) goMyProfile.onclick=()=>{haptic('light');s.view='myProfile';render()};
     const backHome=document.getElementById('backHome');
-    if(backHome) backHome.onclick=()=>{s.view='home';render()};
+    if(backHome) backHome.onclick=()=>{haptic('light');s.view='home';render()};
     const backHome2=document.getElementById('backHome2');
-    if(backHome2) backHome2.onclick=()=>{s.view='home';render()};
+    if(backHome2) backHome2.onclick=()=>{haptic('light');s.view='account';render()};
+
+    // === START: ARTIMEET ACCOUNT HUB HANDLERS ===
+    const goAccount=document.getElementById('goAccount');
+    if(goAccount) goAccount.onclick=()=>{haptic('light');s.view='account';render()};
+    const backAccount=document.getElementById('backAccount');
+    if(backAccount) backAccount.onclick=()=>{haptic('light');s.view='home';render()};
+    const goNotifications=document.getElementById('goNotifications');
+    if(goNotifications) goNotifications.onclick=()=>{haptic('light');s.notifReturnView=s.view;s.view='notifications';render()};
+    const backFromNotifications=document.getElementById('backFromNotifications');
+    if(backFromNotifications) backFromNotifications.onclick=()=>{haptic('light');s.view=s.notifReturnView||'account';render()};
+    const goSettings=document.getElementById('goSettings');
+    if(goSettings) goSettings.onclick=()=>{haptic('light');s.view='settings';render()};
+    const backFromSettings=document.getElementById('backFromSettings');
+    if(backFromSettings) backFromSettings.onclick=()=>{haptic('light');s.view='account';render()};
+    const goEditProfileFromSettings=document.getElementById('goEditProfileFromSettings');
+    if(goEditProfileFromSettings) goEditProfileFromSettings.onclick=()=>{haptic('light');s.editingProfile=true;s.profileReturnView='settings';s.view='myProfile';render()};
+    const goPrivacyData=document.getElementById('goPrivacyData');
+    if(goPrivacyData) goPrivacyData.onclick=()=>{haptic('light');s.view='privacyData';render()};
+    const backFromPrivacyData=document.getElementById('backFromPrivacyData');
+    if(backFromPrivacyData) backFromPrivacyData.onclick=()=>{haptic('light');s.view='settings';render()};
+
+    document.querySelectorAll('[data-notiftoggle]').forEach(el=>el.onclick=()=>{
+      haptic('light');
+      const k=el.dataset.notiftoggle;
+      s.notifPrefs[k]=!s.notifPrefs[k];
+      saveSession();
+      render();
+    });
+
+    const downloadMyData=document.getElementById('downloadMyData');
+    if(downloadMyData) downloadMyData.onclick=()=>{
+      haptic('light');
+      const payload={profile:s.account||null, meetings:s.meetings, exportedAt:new Date().toISOString()};
+      const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='artimeet-my-data.json';
+      a.click();
+    };
+    const deleteAccount=document.getElementById('deleteAccount');
+    // TODO(backend): replace with a real account-deletion Edge Function / RPC that erases
+    // the auth user + profiles/meetings rows. For now this only notifies + signs the user out.
+    if(deleteAccount) deleteAccount.onclick=async ()=>{
+      haptic('warning');
+      if(!confirm('This will request deletion of your Artimeet account and data. Continue?')) return;
+      if(s.account) await notifyBackend('delete_account_requested', {email:s.account.email, userId:s.account.id});
+      alert('Your deletion request has been received. We will process it and confirm by email.');
+      await doSignOut();
+    };
+
+    document.querySelectorAll('[data-activitytab]').forEach(b=>b.onclick=()=>{haptic('light');s.activityTab=b.dataset.activitytab;render()});
+    document.querySelectorAll('[data-meeting]').forEach(card=>card.onclick=(e)=>{
+      if(e.target.closest('button')) return;
+      haptic('light');
+      s.selectedMeetingId=card.dataset.meeting;
+      s.view='meetingDetail';
+      render();
+    });
+    const backFromMeetingDetail=document.getElementById('backFromMeetingDetail');
+    if(backFromMeetingDetail) backFromMeetingDetail.onclick=()=>{haptic('light');s.view='myMeetings';render()};
+    // === END: ARTIMEET ACCOUNT HUB HANDLERS ===
 
     const editProfile=document.getElementById('editProfile');
-    if(editProfile) editProfile.onclick=()=>{s.editingProfile=true;render()};
+    if(editProfile) editProfile.onclick=()=>{s.editingProfile=true;s.profileReturnView='myProfile';render()};
     const cancelEditProfile=document.getElementById('cancelEditProfile');
-    if(cancelEditProfile) cancelEditProfile.onclick=()=>{s.editingProfile=false;render()};
-    const cancelEditProfile2=document.getElementById('cancelEditProfile2');
-    if(cancelEditProfile2) cancelEditProfile2.onclick=()=>{s.editingProfile=false;render()};
+    if(cancelEditProfile) cancelEditProfile.onclick=()=>{haptic('light');s.editingProfile=false;s.view=s.profileReturnView||'myProfile';render()};
 
     const pfAvatarBtn=document.getElementById('pfAvatarBtn');
     if(pfAvatarBtn) pfAvatarBtn.onclick=()=>document.getElementById('pfAvatarFile').click();
@@ -1228,6 +1510,7 @@ textarea{min-height:90px;resize:vertical}
       s.account={...s.account,name:pfName,org:pfOrg,phone:pfPhone,timezone:pfTimezone};
       saveSession();
       s.editingProfile=false;
+      s.view=s.profileReturnView||'myProfile';
       render();
     };
     async function doSignOut(){
@@ -1235,8 +1518,6 @@ textarea{min-height:90px;resize:vertical}
     }
     const signOut=document.getElementById('signOut');
     if(signOut) signOut.onclick=doSignOut;
-    const signOut2=document.getElementById('signOut2');
-    if(signOut2) signOut2.onclick=doSignOut;
     document.querySelectorAll('[data-ics]').forEach(b=>b.onclick=()=>{
       const m=s.meetings.find(x=>x.meetingId===b.dataset.ics);
       if(m) downloadIcs(m);
@@ -1257,6 +1538,7 @@ textarea{min-height:90px;resize:vertical}
     };
     const backFromSignIn=document.getElementById('backFromSignIn');
     if(backFromSignIn) backFromSignIn.onclick=()=>{
+      haptic('light');
       s.otpError='';
       s.view=s.authReturnView; s.step=s.authReturnStep;
       render();
@@ -1279,6 +1561,7 @@ textarea{min-height:90px;resize:vertical}
     if(resendOtpBtn) resendOtpBtn.onclick=()=>{haptic('light');resendOtp()};
     const backFromOtp=document.getElementById('backFromOtp');
     if(backFromOtp) backFromOtp.onclick=()=>{
+      haptic('light');
       s.otpError=''; s.otpDigits=''; s.otpSentAt=null;
       s.view = s.otpMode==='signup' ? 'flow' : 'signInEmail';
       if(s.otpMode==='signup') s.step=4;
