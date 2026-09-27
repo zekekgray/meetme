@@ -757,10 +757,12 @@ textarea{min-height:90px;resize:vertical}
     if(s.editingProfile){
       publicView.innerHTML=`
       <div class="panel confirm" style="max-width:420px">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+        <!-- === START: ARTIMEET BACKPILL TOPLEFT — EDIT PROFILE === -->
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="backpill" id="cancelEditProfile" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
           <h2 style="margin:0">Edit Profile</h2>
-          <button class="btn" id="cancelEditProfile">✕ Cancel</button>
         </div>
+        <!-- === END: ARTIMEET BACKPILL TOPLEFT — EDIT PROFILE === -->
         <div class="sub">Email can't be changed here — it's your sign-in ID.</div>
         <label>Profile photo</label>
         <div class="avatarRow">
@@ -773,7 +775,7 @@ textarea{min-height:90px;resize:vertical}
           <label>Org</label><input id="pfOrg" value="${s.account&&s.account.org?s.account.org:''}" placeholder="ABC Company">
           <label>Phone</label><input id="pfPhone" value="${s.account&&s.account.phone?s.account.phone:''}" placeholder="+63 912 345 6789">
           <label>Timezone</label><input id="pfTimezone" value="${s.account?s.account.timezone:''}" placeholder="Asia/Manila">
-          <div class="actions"><button class="btn" id="cancelEditProfile2" type="button">Cancel</button><button class="btn primary" type="submit">Save changes</button></div>
+          <button class="btn primary full" type="submit">Save changes</button>
         </form>
       </div>`;
       return;
@@ -800,14 +802,18 @@ textarea{min-height:90px;resize:vertical}
   function renderSignInEmail(){
     publicView.innerHTML=`
     <div class="panel confirm" style="max-width:420px">
-      <h2>Sign in to Artimeet</h2>
+      <!-- === START: ARTIMEET BACKPILL TOPLEFT — SIGNIN === -->
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="backpill" id="backFromSignIn" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <h2 style="margin:0">Sign in to Artimeet</h2>
+      </div>
+      <!-- === END: ARTIMEET BACKPILL TOPLEFT — SIGNIN === -->
       <div class="sub">Enter your email — we'll send you a one-time code, no password needed.</div>
       <form id="signInEmailForm">
         <label>Email</label><input id="signInEmailInput" type="email" required value="${s.authEmail}" placeholder="juan@email.com">
         ${s.otpError ? `<div class="sub" style="color:#c0392b;margin-top:8px">${s.otpError}</div>` : ''}
         <button class="btn primary full" type="submit" ${s.authLoading?'disabled':''}>${s.authLoading?'Sending…':'Send code'}</button>
       </form>
-      <button class="backpill" id="backFromSignIn" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
     </div>`;
   }
 
@@ -815,7 +821,12 @@ textarea{min-height:90px;resize:vertical}
     const minutesLeft = s.otpSentAt ? Math.max(0, 5 - Math.floor((Date.now()-s.otpSentAt)/60000)) : 5;
     publicView.innerHTML=`
     <div class="panel confirm" style="max-width:420px">
-      <h2>Enter your code</h2>
+      <!-- === START: ARTIMEET BACKPILL TOPLEFT — OTP === -->
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="backpill" id="backFromOtp" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <h2 style="margin:0">Enter your code</h2>
+      </div>
+      <!-- === END: ARTIMEET BACKPILL TOPLEFT — OTP === -->
       <div class="sub">We sent a 6-digit code to <b>${s.authEmail}</b>. It expires in about ${minutesLeft||'a few'} minute${minutesLeft===1?'':'s'}.</div>
       <form id="otpForm">
         <label>6-digit code</label>
@@ -824,7 +835,6 @@ textarea{min-height:90px;resize:vertical}
         <button class="btn primary full" type="submit" ${s.otpLoading?'disabled':''}>${s.otpLoading?'Verifying…':'Verify & continue'}</button>
       </form>
       <button class="btn secondary full" id="resendOtp" ${s.resendCooldown>0?'disabled':''}>${s.resendCooldown>0?`Resend code (${s.resendCooldown}s)`:'Resend code'}</button>
-      <button class="btn ghost full" id="backFromOtp">← Use a different email</button>
     </div>`;
   }
 
@@ -847,6 +857,11 @@ textarea{min-height:90px;resize:vertical}
     if(s.step===0){
       publicView.innerHTML=`
       <div class="panel hero">
+        <!-- === START: ARTIMEET BACKPILL TOPLEFT — STEP0 === -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:2px">
+          <button class="backpill" id="backFromStep0" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        </div>
+        <!-- === END: ARTIMEET BACKPILL TOPLEFT — STEP0 === -->
         <h1>Let's find a time.</h1>
         <p>Tell us what you'd like to discuss — we'll take it from there.</p>
         <div class="choices">
@@ -862,7 +877,12 @@ textarea{min-height:90px;resize:vertical}
       publicView.innerHTML=`
       <div class="panel">
         <div class="steps"><span class="stepdot on"></span><span class="stepdot on"></span><span class="stepdot"></span><span class="stepdot"></span></div>
-        <h2>When would you like to meet?</h2>
+        <!-- === START: ARTIMEET BACKPILL TOPLEFT — STEP1 === -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:2px">
+          <button class="backpill" id="back" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <h2 style="margin:0">When would you like to meet?</h2>
+        </div>
+        <!-- === END: ARTIMEET BACKPILL TOPLEFT — STEP1 === -->
         <div class="sub">Propose a date and time — we'll confirm and get back to you.</div>
         <div class="calendar">
           <div class="month"><button id="prevMonth" type="button" ${(s.viewYear===now.getFullYear()&&s.viewMonth===now.getMonth())?'disabled':''}><svg class="icon" viewBox="0 0 24 24" style="width:18px;height:18px;margin:0"><path d="M15 6l-6 6 6 6"/></svg></button><span>${monthNames[s.viewMonth]} ${s.viewYear}</span><button id="nextMonth" type="button"><svg class="icon" viewBox="0 0 24 24" style="width:18px;height:18px;margin:0"><path d="M9 6l6 6-6 6"/></svg></button></div>
@@ -896,7 +916,7 @@ textarea{min-height:90px;resize:vertical}
           </div>
         </div>` : ''}
         <div class="sub" style="margin-top:12px">Times shown in your timezone: <b>${formatTimezone(s.timezone)}</b></div>
-        <div class="actions"><button class="backpill" id="back" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><button class="btn primary" id="next" ${(!s.day||!s.time)?'disabled':''}>Continue</button></div>
+        <button class="btn primary full" id="next" ${(!s.day||!s.time)?'disabled':''}>Continue</button>
       </div>`;
     }
 
@@ -905,7 +925,12 @@ textarea{min-height:90px;resize:vertical}
         publicView.innerHTML=`
         <div class="panel">
           <div class="steps"><span class="stepdot on"></span><span class="stepdot on"></span><span class="stepdot on"></span><span class="stepdot"></span></div>
-          <h2>Almost there.</h2>
+          <!-- === START: ARTIMEET BACKPILL TOPLEFT — STEP2 LOGGEDIN === -->
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:2px">
+            <button class="backpill" id="back" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+            <h2 style="margin:0">Almost there.</h2>
+          </div>
+          <!-- === END: ARTIMEET BACKPILL TOPLEFT — STEP2 LOGGEDIN === -->
           <div class="sub">You're booking a meeting with ${s.account.name||'your account'}.</div>
           <div class="summary" style="text-align:left">
             <div class="row"><b>Name</b><span>${s.account.name||'—'}</span></div>
@@ -913,13 +938,18 @@ textarea{min-height:90px;resize:vertical}
             <div class="row"><b>Email</b><span>${s.account.email||'—'}</span></div>
           </div>
           <label>Message (optional)</label><textarea id="notes" placeholder="Anything you'd like to discuss...">${s.notes}</textarea>
-          <div class="actions"><button class="backpill" id="back" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><button class="btn primary" id="requestMeetingLoggedIn" type="button">Request Meeting</button></div>
+          <button class="btn primary full" id="requestMeetingLoggedIn" type="button">Request Meeting</button>
         </div>`;
       } else {
       publicView.innerHTML=`
       <div class="panel">
         <div class="steps"><span class="stepdot on"></span><span class="stepdot on"></span><span class="stepdot on"></span><span class="stepdot"></span></div>
-        <h2>Almost there.</h2>
+        <!-- === START: ARTIMEET BACKPILL TOPLEFT — STEP2 GUEST === -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:2px">
+          <button class="backpill" id="back" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <h2 style="margin:0">Almost there.</h2>
+        </div>
+        <!-- === END: ARTIMEET BACKPILL TOPLEFT — STEP2 GUEST === -->
         <div class="sub">Just a few details so we can get back to you with a confirmation.</div>
         <form id="form">
           <label>Full name</label><input id="name" required value="${s.name}" placeholder="Juan Dela Cruz">
@@ -927,7 +957,7 @@ textarea{min-height:90px;resize:vertical}
           <label>Email</label><input id="email" type="email" required value="${s.email}" placeholder="juan@email.com">
           <label>Phone (optional)</label><input id="phone" value="${s.phone}" placeholder="+63 912 345 6789">
           <label>Notes (optional)</label><textarea id="notes" placeholder="Tell me anything I should know.">${s.notes}</textarea>
-          <div class="actions"><button class="backpill" id="back" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><button class="btn primary" type="submit">Request Meeting</button></div>
+          <button class="btn primary full" type="submit">Request Meeting</button>
          </form>
       </div>`;
       }
@@ -936,6 +966,11 @@ textarea{min-height:90px;resize:vertical}
     if(s.step===3){
       publicView.innerHTML=`
       <div class="panel confirm">
+        <!-- === START: ARTIMEET BACKPILL TOPLEFT — CONFIRM === -->
+        <div style="display:flex;justify-content:flex-start;margin-bottom:4px">
+          <button class="backpill" id="backFromConfirm" type="button" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        </div>
+        <!-- === END: ARTIMEET BACKPILL TOPLEFT — CONFIRM === -->
         <div class="check"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
         <h2>Meeting Requested</h2>
         <!-- TODO(backend): wire to real transactional email service (e.g. SendGrid/Postmark) on request submit + status change -->
@@ -951,9 +986,7 @@ textarea{min-height:90px;resize:vertical}
         </div>
         <button class="btn primary full" id="addGoogleCalendar">＋ Add to Google Calendar</button>
         <button class="btn secondary full" id="addCalendar" style="margin-top:8px">Download .ics (Apple / Outlook)</button>
-        ${s.account ? `
-          <button class="btn full" id="goHomeFromConfirm">Back to Artimeet</button>
-        ` : `
+        ${s.account ? `` : `
           <div class="sub" style="margin-top:24px;font-weight:750;color:var(--ink)">Want to manage your meetings?</div>
           <div class="sub" style="margin-top:4px">Create an account to view requests, reschedule, cancel, and keep your info for future meetings.</div>
           <button class="btn secondary full" id="createAccount">Create an Artimeet account</button>
@@ -1036,6 +1069,14 @@ textarea{min-height:90px;resize:vertical}
     const back=document.getElementById('back');
     if(back) back.onclick=()=>{s.step--;render()};
 
+    // === START: ARTIMEET BACKPILL HANDLER — STEP0 ===
+    const backFromStep0=document.getElementById('backFromStep0');
+    if(backFromStep0) backFromStep0.onclick=()=>{
+      if(s.account){ s.view='home'; render(); }
+      else { resetRequestFlow(); s.view='landing'; render(); }
+    };
+    // === END: ARTIMEET BACKPILL HANDLER — STEP0 ===
+
     const form=document.getElementById('form');
     if(form) form.onsubmit=e=>{
       e.preventDefault();
@@ -1060,8 +1101,13 @@ textarea{min-height:90px;resize:vertical}
     const createAccount=document.getElementById('createAccount');
     if(createAccount) createAccount.onclick=()=>{s.authReturnView='flow';s.authReturnStep=3;s.step=4;render()};
 
-    const goHomeFromConfirm=document.getElementById('goHomeFromConfirm');
-    if(goHomeFromConfirm) goHomeFromConfirm.onclick=()=>{s.view='home';render()};
+    // === START: ARTIMEET BACKPILL HANDLER — CONFIRM ===
+    const backFromConfirm=document.getElementById('backFromConfirm');
+    if(backFromConfirm) backFromConfirm.onclick=()=>{
+      if(s.account){ s.view='home'; render(); }
+      else { resetRequestFlow(); s.view='landing'; render(); }
+    };
+    // === END: ARTIMEET BACKPILL HANDLER — CONFIRM ===
 
     const skipAccount=document.getElementById('skipAccount');
     if(skipAccount) skipAccount.onclick=()=>{
